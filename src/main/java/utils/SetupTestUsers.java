@@ -2,10 +2,7 @@ package utils;
 
 
 import entities.Role;
-import entities.Stock;
 import entities.User;
-import facades.StockFacade;
-import rest.StockResource;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

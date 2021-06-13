@@ -1,3 +1,4 @@
+/*
 
 package facades;
 
@@ -135,10 +136,16 @@ public class StockFacadeTest {
 
     }
 
-    /*@Test
+    */
+/*@Test
     public void testGetVerifiedUserShouldntWork()  {
-      *//*  assertThrows(security.errorhandling.AuthenticationException.class, () -> facade.getVeryfiedUser("user", "ae"));*//*
-    }*/
+      *//*
+*/
+/*  assertThrows(security.errorhandling.AuthenticationException.class, () -> facade.getVeryfiedUser("user", "ae"));*//*
+*/
+/*
+    }*//*
+
 
     @Test
     public void tickerShouldBeAddedToUsersDBAndPinnedStocksShouldBeFound(){
@@ -168,3 +175,4 @@ public class StockFacadeTest {
 
 }
 
+*/

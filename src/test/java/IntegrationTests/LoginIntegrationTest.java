@@ -23,7 +23,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 
-//Disabled
+@Disabled
 public class LoginIntegrationTest {
 
     private static final int SERVER_PORT = 7777;
