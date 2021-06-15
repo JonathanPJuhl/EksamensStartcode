@@ -128,7 +128,9 @@ public class User implements Serializable {
     stockList.add(userStock);
   }
 
-
+public void doNothing(){
+    
+}
 
   public String getRecoveryquestion() {
     return recoveryquestion;
