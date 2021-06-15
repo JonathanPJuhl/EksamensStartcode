@@ -57,8 +57,7 @@ public class User implements Serializable {
           @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
           @JoinColumn(name = "message_id", referencedColumnName = "message_id")
   })
-  @ManyToMany
-  private List<Notifications> notiList = new ArrayList<Notifications>();
+
 
 
 
@@ -129,17 +128,7 @@ public class User implements Serializable {
     stockList.add(userStock);
   }
 
-  public void addNoti(Notifications noti){
-    notiList.add(noti);
-  }
 
-  public List<Notifications> getNotiList() {
-    return notiList;
-  }
-
-  public void setNotiList(List<Notifications> notiList) {
-    this.notiList = notiList;
-  }
 
   public String getRecoveryquestion() {
     return recoveryquestion;

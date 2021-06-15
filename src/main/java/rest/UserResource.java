@@ -11,21 +11,13 @@ import utils.MailSystem;
 import utils.SetupTestUsers;
 
 import javax.annotation.security.RolesAllowed;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import java.nio.channels.UnresolvedAddressException;
-import java.util.List;
 
-/**
- * @author lam@cphbusiness.dk
- */
 @Path("user")
 public class UserResource {
 
