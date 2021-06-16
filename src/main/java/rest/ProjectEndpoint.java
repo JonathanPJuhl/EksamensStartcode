@@ -77,7 +77,6 @@ public class ProjectEndpoint {
     @GET
     @Path("alluserstoriesforgivenproject/{projectName}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed("developer")
     public String allUserStories(@PathParam("projectName") String projectName){
 
         return  GSON.toJson(pF.getAllUserstoriesForGivenProject(projectName));
