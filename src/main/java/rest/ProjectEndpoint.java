@@ -59,4 +59,16 @@ public class ProjectEndpoint {
         pF.assignDevToProject(dev, proj);
         return "";
     }
+    @PUT
+    @Path("record/{developerandproj}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("developer")
+    public String addHoursToProject(@PathParam("developerandproj") String developerAndProj){
+        String[] arr = developerAndProj.split(",");
+        String dev = arr[0];
+        String proj = arr[1];
+
+        pF.assignDevToProject(dev, proj);
+        return "";
+    }
 }
