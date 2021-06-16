@@ -4,17 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.*;
 import facades.ProjectFacade;
-import facades.UserFacade;
 import utils.EMF_Creator;
-
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("project")
@@ -22,7 +16,6 @@ public class ProjectEndpoint {
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     ProjectFacade pF = ProjectFacade.geProjectFacade(EMF);
-    UserFacade uF = UserFacade.getUserFacade(EMF);
 
 
     @POST
@@ -45,7 +38,7 @@ public class ProjectEndpoint {
 
         return GSON.toJson(dtoList);
     }
-    //TEST
+
     @PUT
     @Path("assign/{developerandproj}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -58,7 +51,7 @@ public class ProjectEndpoint {
         pF.assignDevToProject(dev, proj);
         return "";
     }
-    //TEST
+
     @PUT
     @Path("record")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -69,7 +62,7 @@ public class ProjectEndpoint {
        pF.addHoursToProj(dto);
         return "{\"resp\":\"Success!\"}";
     }
-//TEST
+
     @GET
     @Path("myrecords/{dev}")
     @RolesAllowed("developer")
@@ -80,19 +73,22 @@ public class ProjectEndpoint {
         String project = both[1];
         return  "{\"hours\":"+"\""+pF.getHoursSpentOnUserstories(developer, project)+"\"}";
     }
-    //TEST
+
     @GET
     @Path("alluserstoriesforgivenproject/{projectName}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("developer")
     public String allUserStories(@PathParam("projectName") String projectName){
 
         return  GSON.toJson(pF.getAllUserstoriesForGivenProject(projectName));
     }
+
     @GET
     @Path("invoice/{project}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("admin")
     public String invoice(@PathParam("project") String project){
-        List<ProjectHours> invoice = pF.getInvoice(project);
+        List<InvoiceDTO> invoice = pF.getInvoice(project);
         return GSON.toJson(invoice);
     }
 }

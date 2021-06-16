@@ -1,5 +1,7 @@
 package entities;
 
+import org.eclipse.persistence.annotations.CascadeOnDelete;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -28,6 +30,7 @@ public class ProjectHours implements Serializable {
     private double hoursSpent;
 
  @ManyToOne(fetch = FetchType.LAZY)
+ @CascadeOnDelete
     private Proj project;
 
     @ManyToOne(fetch = FetchType.LAZY)

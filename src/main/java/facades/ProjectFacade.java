@@ -85,7 +85,8 @@ public class ProjectFacade {
         EntityManager em = emf.createEntityManager();
        em.getTransaction().begin();
        try {
-           TypedQuery<ProjectHours> addTime = em.createQuery("SELECT ph from ProjectHours ph join Proj p WHERE p.name=:projectName AND ph.userStory = :userStory AND ph.dev.email=:email", ProjectHours.class);
+           System.out.println(dto.toString());
+           TypedQuery<ProjectHours> addTime = em.createQuery("SELECT ph from ProjectHours ph join Developer d WHERE ph.project.name=:projectName AND ph.userStory = :userStory AND d.email=:email", ProjectHours.class);
            addTime.setParameter("email", dto.getEmail());
            addTime.setParameter("projectName", dto.getProjectName());
            addTime.setParameter("userStory", dto.getUserStory());
@@ -94,6 +95,7 @@ public class ProjectFacade {
            em.merge(ph);
            em.getTransaction().commit();
        }catch(NoResultException e){
+
            ProjectHours ph = new ProjectHours(dto.getUserStory(), dto.getDescription(), dto.getHoursSpent());
            Proj proj = em.find(Proj.class, dto.getProjectName());
            ph.setProject(proj);
@@ -128,7 +130,7 @@ public class ProjectFacade {
     public Double getHoursSpentOnUserstories(String developer, String project) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        TypedQuery<ProjectHours> foundHours = em.createQuery("SELECT ph FROM ProjectHours ph WHERE ph.project.name=:projectName AND ph.dev.email= :devEmail", ProjectHours.class);
+        TypedQuery<ProjectHours> foundHours = em.createQuery("SELECT ph FROM ProjectHours ph join Developer d WHERE ph.project.name=:projectName AND d.email= :devEmail", ProjectHours.class);
         foundHours.setParameter("projectName", project);
         foundHours.setParameter("devEmail", developer);
         List<ProjectHours> finalList = foundHours.getResultList();
@@ -139,13 +141,20 @@ public class ProjectFacade {
         return totalHours;
     }
 
-    public List<ProjectHours> getInvoice(String project) {
+    public List<InvoiceDTO> getInvoice(String project) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         TypedQuery<ProjectHours> createInvoice = em.createQuery("SELECT ph FROM ProjectHours ph WHERE ph.project.name=:project", ProjectHours.class);
         createInvoice.setParameter("project", project);
         List<ProjectHours> invoice = createInvoice.getResultList();
-        return invoice;
+        List<InvoiceDTO> invoiceDTO = new ArrayList<>();
+        for(int i = 0; i<invoice.size(); i++){
+            invoiceDTO.add(new InvoiceDTO(invoice.get(i).getUserStory(), invoice.get(i).getDescription(),
+                    invoice.get(i).getHoursSpent(),
+                    invoice.get(i).getDev().getBillingPrHour(),
+                    invoice.get(i).getDev().getDevName()));
+        }
+        return invoiceDTO;
     }
 }
 
