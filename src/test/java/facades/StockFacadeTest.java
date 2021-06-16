@@ -41,11 +41,11 @@ public class StockFacadeTest {
             em.getTransaction().begin();
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
-            User user = new User("user", "test");
+            Developer user = new Developer("user", "test");
             user.addRole(userRole);
-            User admin = new User("admin", "test");
+            Developer admin = new Developer("admin", "test");
             admin.addRole(adminRole);
-            User both = new User("user_admin", "test");
+            Developer both = new Developer("user_admin", "test");
             both.addRole(userRole);
             both.addRole(adminRole);
             em.persist(userRole);
@@ -69,7 +69,7 @@ public class StockFacadeTest {
             em.createQuery("delete from Role").executeUpdate();
             em.createQuery("delete from StockSymbol").executeUpdate();
             em.createQuery("delete from UserStockNoti").executeUpdate();
-            em.createQuery("delete from User").executeUpdate();
+            em.createQuery("delete from Developer").executeUpdate();
 
             em.getTransaction().commit();
         } finally {

@@ -7,11 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -30,7 +28,7 @@ public class Role implements Serializable {
     private String roleName;
     
     @ManyToMany(mappedBy = "roleList")
-    private List<User> userList;
+    private List<Developer> developerList;
 
     public Role() {
     }
@@ -47,11 +45,11 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<Developer> getUserList() {
+        return developerList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setUserList(List<Developer> developerList) {
+        this.developerList = developerList;
     }   
 }

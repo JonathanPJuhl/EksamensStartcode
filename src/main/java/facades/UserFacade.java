@@ -1,13 +1,13 @@
 package facades;
 
+import entities.Developer;
 import entities.Role;
-import entities.User;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
 import security.errorhandling.AuthenticationException;
-import utils.EMF_Creator;
 
 /**
  * @author lam@cphbusiness.dk
@@ -33,29 +33,29 @@ public class UserFacade {
         return instance;
     }
 
-    public User getVeryfiedUser(String username, String password) throws AuthenticationException {
+    public Developer getVeryfiedUser(String username, String password) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();
-        User user;
+        Developer developer;
         try {
-            user = em.find(User.class, username);
-            if (user == null || !user.verifyPassword(password)) {
-                throw new AuthenticationException("Invalid user name or password");
+            developer = em.find(Developer.class, username);
+            if (developer == null || !developer.verifyPassword(password)) {
+                throw new AuthenticationException("Invalid developer name or password");
             }
         } finally {
             em.close();
         }
-        return user;
+        return developer;
     }
 
-    public User createUser(User user) {
+    public Developer createUser(Developer developer) {
 
         EntityManager em = emf.createEntityManager();
 
-        User userforPersist = new User(user.getUsername(), user.getPassword(), user.getRecoveryquestion(), user.getAnswer());
+        Developer userforPersist = new Developer(developer.getEmail(), developer.getPassword());
 
         em.getTransaction().begin();
 
-        Role userRole = new Role("user");
+        Role userRole = new Role("developer");
 
         userforPersist.addRole(userRole);
 
@@ -65,27 +65,27 @@ public class UserFacade {
         return userforPersist;
     }
 
-    public User findUserByUsername(String username){
+    public Developer findUserByUsername(String username){
         EntityManager em = emf.createEntityManager();
-        User userFound;
+        Developer developerFound;
         try {
         em.getTransaction().begin();
-        TypedQuery<User> user = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
+        TypedQuery<Developer> user = em.createQuery("SELECT u FROM Developer u WHERE u.email = :username", Developer.class);
         user.setParameter("username", username);
         em.getTransaction().commit();
-        userFound = user.getSingleResult();}
+        developerFound = user.getSingleResult();}
         finally{
         em.close();
         }
-        return userFound;
+        return developerFound;
     }
 
-    public void updatePasswordForUser(User user) {
+    public void updatePasswordForUser(Developer developer) {
         EntityManager em = emf.createEntityManager();
-        User foundUser = findUserByUsername(user.getUsername());
-        foundUser.setPassword(user.getPassword());
+        Developer foundDeveloper = findUserByUsername(developer.getEmail());
+        foundDeveloper.setPassword(developer.getPassword());
         em.getTransaction().begin();
-        em.merge(foundUser);
+        em.merge(foundDeveloper);
         em.getTransaction().commit();
         em.close();
 

@@ -1,8 +1,8 @@
 
 package rest;
 
+import entities.Developer;
 import entities.Role;
-import entities.User;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
@@ -74,23 +74,23 @@ public class NotificationsResourceTest {
 
         try {
             em.getTransaction().begin();
-            em.createQuery("delete from User").executeUpdate();
+            em.createQuery("delete from Developer").executeUpdate();
             em.createQuery("delete from Role").executeUpdate();
 
-            Role userRole = new Role("user");
+            Role userRole = new Role("developer");
             Role adminRole = new Role("admin");
-            User user = new User("user", "test", "first cat", "dead");
-            user.addRole(userRole);
-            User admin = new User("admin", "test", "first cat", "dead");
+            Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
+            Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
+            developer.addRole(userRole);
             admin.addRole(adminRole);
-            User both = new User("user_admin", "test", "first cat", "dead");
-            both.addRole(userRole);
-            both.addRole(adminRole);
+//            Developer both = new Developer("user_admin", "test", "first cat", "dead");
+//            both.addRole(userRole);
+//            both.addRole(adminRole);
             em.persist(userRole);
             em.persist(adminRole);
-            em.persist(user);
+            em.persist(developer);
             em.persist(admin);
-            em.persist(both);
+            //em.persist(both);
             em.getTransaction().commit();
         } finally {
             em.close();

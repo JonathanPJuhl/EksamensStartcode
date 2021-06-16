@@ -2,8 +2,8 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import entities.Developer;
 import entities.ResetPasswordDTO;
-import entities.User;
 import entities.UserDTO;
 import facades.UserFacade;
 import utils.EMF_Creator;
@@ -43,9 +43,9 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("create")
     public String createUser(String user) {
-        User userForCreation = GSON.fromJson(user, User.class);
-        User userForReturn = facade.createUser(userForCreation);
-        return GSON.toJson(userForReturn);
+        Developer developerForCreation = GSON.fromJson(user, Developer.class);
+        Developer developerForReturn = facade.createUser(developerForCreation);
+        return GSON.toJson(developerForReturn);
     }
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,9 +63,9 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("newpassword")
     public String createNewPass(String emailAndNewPass) {
-        User user = GSON.fromJson(emailAndNewPass, User.class);
-        System.out.println(user.toString());
-        facade.updatePasswordForUser(user);
+        Developer developer = GSON.fromJson(emailAndNewPass, Developer.class);
+        System.out.println(developer.toString());
+        facade.updatePasswordForUser(developer);
         return "{\"resp\":\"success\"}";
     }
 
@@ -84,11 +84,18 @@ public class UserResource {
     @Path("account/{username}")
    // @RolesAllowed({"user"})
     public String getAccountInfo(@PathParam("username") String username) {
-        User user = facade.findUserByUsername(username);
-        UserDTO userDTO = new UserDTO(user.getUsername(), user.getRecoveryquestion());
+        Developer developer = facade.findUserByUsername(username);
+        UserDTO userDTO = new UserDTO(developer.getEmail());
         return GSON.toJson(userDTO);
     }
-
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("admin")
+    @RolesAllowed("admin")
+    public String getFromAdmin() {
+        String thisuser = securityContext.getUserPrincipal().getName();
+        return "{\"msg\": \"Hello to (admin) Developer: " + thisuser + "\"}";
+    }
 
 
     @GET

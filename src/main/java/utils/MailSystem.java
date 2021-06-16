@@ -1,7 +1,7 @@
 package utils;
 
 import entities.ResetPasswordDTO;
-import entities.User;
+import entities.Developer;
 import facades.UserFacade;
 
 import java.util.Properties;
@@ -23,9 +23,9 @@ public class MailSystem {
         String answerToSecurityQuestion = recipientAndSecurityAnswer.getAnswerToSecurityQuestion();
 
         UserFacade userF = UserFacade.getUserFacade(EMF);
-        User user = userF.findUserByUsername(recipient);
+        Developer developer = userF.findUserByUsername(recipient);
 
-        if (user.verifySecurityAnswer(answerToSecurityQuestion)) {
+
 
             // Recipient's email ID needs to be mentioned.
             String to = recipient;
@@ -86,9 +86,9 @@ public class MailSystem {
                 mex.printStackTrace();
             }
 
-        }
-        else{
+
+
             System.out.println("Securityquestion answers don't match");
-        }
+
     }
 }
