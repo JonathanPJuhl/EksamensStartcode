@@ -55,6 +55,8 @@ public class Developer implements Serializable {
   @ManyToMany(mappedBy = "devList")
   private List<Proj> projectsList = new ArrayList<>();
 
+  @OneToMany()
+
 
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {

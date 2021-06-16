@@ -27,7 +27,6 @@ public class Proj implements Serializable {
 
 
     @OneToMany
-    @JoinColumn(name="name")
     private List<ProjectHours> projectHours = new ArrayList<>();
 
    @JoinTable(name = "dev_projects", joinColumns = {

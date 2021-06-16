@@ -45,6 +45,7 @@ public class ProjectEndpoint {
 
         return GSON.toJson(dtoList);
     }
+    //TEST
     @PUT
     @Path("assign/{developerandproj}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,6 +58,7 @@ public class ProjectEndpoint {
         pF.assignDevToProject(dev, proj);
         return "";
     }
+    //TEST
     @PUT
     @Path("record")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -65,9 +67,20 @@ public class ProjectEndpoint {
        HourRecorderDTO dto = GSON.fromJson(developerProjAndTimeSpent, HourRecorderDTO.class);
 
        pF.addHoursToProj(dto);
-        return "";
+        return "{\"resp\":\"Success!\"}";
     }
-    //Nullpoint ifbm denne
+//TEST
+    @GET
+    @Path("myrecords/{dev}")
+    @RolesAllowed("developer")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String myHours(@PathParam("dev") String devAndProject){
+        String[] both = devAndProject.split(",");
+        String developer = both[0];
+        String project = both[1];
+        return  "{\"hours\":"+"\""+pF.getHoursSpentOnUserstories(developer, project)+"\"}";
+    }
+    //TEST
     @GET
     @Path("alluserstoriesforgivenproject/{projectName}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -75,4 +88,6 @@ public class ProjectEndpoint {
 
         return  GSON.toJson(pF.getAllUserstoriesForGivenProject(projectName));
     }
+    @GET
+
 }

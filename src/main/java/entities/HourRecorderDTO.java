@@ -4,6 +4,7 @@ public class HourRecorderDTO {
     private String email;
     private String projectName;
     private String userStory;
+    private String description;
     private double hoursSpent;
 
 
@@ -12,6 +13,13 @@ public class HourRecorderDTO {
         this.projectName = projectName;
         this.hoursSpent = hoursSpent;
         this.userStory = userStory;
+    }
+    public HourRecorderDTO(String email, String projectName, double hoursSpent, String userStory, String description) {
+        this.email = email;
+        this.projectName = projectName;
+        this.hoursSpent = hoursSpent;
+        this.userStory = userStory;
+        this.description = description;
     }
 
     @Override
@@ -26,6 +34,14 @@ public class HourRecorderDTO {
 
     public String getUserStory() {
         return userStory;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setUserStory(String userStory) {

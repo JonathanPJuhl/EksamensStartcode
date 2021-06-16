@@ -30,6 +30,9 @@ public class ProjectHours implements Serializable {
  @ManyToOne(fetch = FetchType.LAZY)
     private Proj project;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Developer dev;
+
 
     public ProjectHours(String userStory, String description, double hoursSpent) {
         this.userStory = userStory;
@@ -38,6 +41,14 @@ public class ProjectHours implements Serializable {
     }
 
     public ProjectHours() {
+    }
+
+    public Developer getDev() {
+        return dev;
+    }
+
+    public void setDev(Developer dev) {
+        this.dev = dev;
     }
 
     public String getUserStory() {

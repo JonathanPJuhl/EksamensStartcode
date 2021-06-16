@@ -3,10 +3,7 @@ package facades;
 import entities.*;
 import security.errorhandling.AuthenticationException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,15 +83,26 @@ public class ProjectFacade {
 
     public void addHoursToProj(HourRecorderDTO dto) {
         EntityManager em = emf.createEntityManager();
-        UserFacade uF = UserFacade.getUserFacade(emf);
-        Developer developer = em.find(Developer.class, dto.getEmail());
-        Proj project = findProjByName(dto.getProjectName());
-        Query addTime = em.createQuery("Update ProjectHours ph SET ph.hoursSpent=:hoursSpent WHERE ph.project.name=:projectName AND ph.userStory =: userStory");
-        addTime.setParameter("hoursSpent", dto.getHoursSpent());
-        addTime.setParameter("projectName", dto.getProjectName());
-        addTime.setParameter("userStory", dto.getUserStory());
-        em.close();
-
+       em.getTransaction().begin();
+       try {
+           TypedQuery<ProjectHours> addTime = em.createQuery("SELECT ph from ProjectHours ph join Proj p WHERE p.name=:projectName AND ph.userStory = :userStory AND ph.dev.email=:email", ProjectHours.class);
+           addTime.setParameter("email", dto.getEmail());
+           addTime.setParameter("projectName", dto.getProjectName());
+           addTime.setParameter("userStory", dto.getUserStory());
+           ProjectHours ph = addTime.getSingleResult();
+           ph.setHoursSpent(ph.getHoursSpent() + dto.getHoursSpent());
+           em.merge(ph);
+           em.getTransaction().commit();
+       }catch(NoResultException e){
+           ProjectHours ph = new ProjectHours(dto.getUserStory(), dto.getDescription(), dto.getHoursSpent());
+           Proj proj = em.find(Proj.class, dto.getProjectName());
+           ph.setProject(proj);
+           ph.setDev(em.find(Developer.class, dto.getEmail()));
+           em.persist(ph);
+           em.getTransaction().commit();
+       } finally {
+           em.close();
+       }
     }
 
     public UserStoryHourDTO getAllUserstoriesForGivenProject(String projectName) {
@@ -107,14 +115,28 @@ public class ProjectFacade {
         //List<ProjectHours> foundStories = findStories.getResultList();
         List<String> foundStories = story.getResultList();
         System.out.println("SIZE: " + foundStories.size());
-        UserStoryHourDTO stories = new UserStoryHourDTO(null, null);
+        UserStoryHourDTO stories = new UserStoryHourDTO(null);
         /*for(int i=0; i<foundStories.size(); i++){
             System.out.println(foundStories.get(i));
             stories.addUserStories(foundStories.get(i));
         }*/
         stories.setUserStories(foundStories);
-        stories.setProjectName(projectName);
+
         return stories;
+    }
+
+    public Double getHoursSpentOnUserstories(String developer, String project) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        TypedQuery<ProjectHours> foundHours = em.createQuery("SELECT ph FROM ProjectHours ph WHERE ph.project.name=:projectName AND ph.dev.email= :devEmail", ProjectHours.class);
+        foundHours.setParameter("projectName", project);
+        foundHours.setParameter("devEmail", developer);
+        List<ProjectHours> finalList = foundHours.getResultList();
+        double totalHours = 0.0;
+        for(int i =0; i<finalList.size(); i++){
+            totalHours+=finalList.get(i).getHoursSpent();
+        }
+        return totalHours;
     }
 }
 

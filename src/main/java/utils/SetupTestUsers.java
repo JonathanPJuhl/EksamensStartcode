@@ -68,6 +68,7 @@ public class SetupTestUsers {
  //   both.addRole(userRole);
 
   hours.setProject(proj);
+  hours.setDev(developer);
     em.persist(hours);
 
 

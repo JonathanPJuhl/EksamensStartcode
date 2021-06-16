@@ -5,23 +5,15 @@ import java.util.List;
 
 public class UserStoryHourDTO {
 
-    private String projectName;
+
     private List<String> userStories;
 
 
-    public UserStoryHourDTO( String projectName, List<String> userStories) {
+    public UserStoryHourDTO(  List<String> userStories) {
 
-        this.projectName = projectName;
+
         this.userStories = new ArrayList<>();
 
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
     }
 
     public List<String> getUserStories() {
