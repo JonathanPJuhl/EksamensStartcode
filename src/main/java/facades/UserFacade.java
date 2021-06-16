@@ -1,13 +1,19 @@
 package facades;
 
 import entities.Developer;
+import entities.DeveloperDTO;
 import entities.Role;
 
+import javax.enterprise.inject.Typed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import security.errorhandling.AuthenticationException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lam@cphbusiness.dk
@@ -89,6 +95,20 @@ public class UserFacade {
         em.getTransaction().commit();
         em.close();
 
+    }
+
+    public List<DeveloperDTO> listOfAllDevs() {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<String> findDevs = em.createQuery("SELECT d.email FROM Developer d JOIN d.roleList r WHERE r.roleName= :developer", String.class);
+        findDevs.setParameter("developer", "developer");
+        List<String> foundDevs = findDevs.getResultList();
+        List<DeveloperDTO> dto = new ArrayList<>();
+        for(String email: foundDevs){
+            dto.add(new DeveloperDTO(email));
+        }
+
+
+        return dto;
     }
 }
 

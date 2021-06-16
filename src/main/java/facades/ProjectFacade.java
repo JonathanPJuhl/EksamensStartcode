@@ -56,5 +56,31 @@ public class ProjectFacade {
         }
         return list;
     }
+    public Proj findProjByName(String projectName){
+        EntityManager em = emf.createEntityManager();
+        Proj projFound;
+        try {
+            em.getTransaction().begin();
+            TypedQuery<Proj> user = em.createQuery("SELECT p FROM Proj p WHERE p.name = :name", Proj.class);
+            user.setParameter("name", projectName);
+            em.getTransaction().commit();
+            projFound = user.getSingleResult();}
+        finally{
+            em.close();
+        }
+        return projFound;
+    }
+
+    public void assignDevToProject(String dev, String proj) {
+        EntityManager em = emf.createEntityManager();
+        UserFacade uF = UserFacade.getUserFacade(emf);
+        Developer developer = uF.findUserByUsername(dev);
+        Proj project = findProjByName(proj);
+        project.addDev(developer);
+        em.getTransaction().begin();
+        em.merge(project);
+        em.getTransaction().commit();
+        em.close();
+    }
 }
 

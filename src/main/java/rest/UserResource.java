@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.Developer;
 import entities.ResetPasswordDTO;
-import entities.UserDTO;
+import entities.DeveloperDTO;
 import facades.UserFacade;
 import utils.EMF_Creator;
 import utils.MailSystem;
@@ -35,6 +35,13 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getInfoForAll() {
         return "{\"msg\":\"Hello anonymous\"}";
+    }
+
+    @GET
+    @Path("all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllDevelopers() {
+        return GSON.toJson(facade.listOfAllDevs());
     }
 
     //Just to verify if the database is setup
@@ -85,7 +92,7 @@ public class UserResource {
    // @RolesAllowed({"user"})
     public String getAccountInfo(@PathParam("username") String username) {
         Developer developer = facade.findUserByUsername(username);
-        UserDTO userDTO = new UserDTO(developer.getEmail());
+        DeveloperDTO userDTO = new DeveloperDTO(developer.getEmail());
         return GSON.toJson(userDTO);
     }
     @GET

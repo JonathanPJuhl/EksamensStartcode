@@ -2,12 +2,14 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import entities.Developer;
 import entities.Proj;
 import entities.ProjDTO;
 import facades.ProjectFacade;
 import facades.UserFacade;
 import utils.EMF_Creator;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -22,12 +24,14 @@ public class ProjectEndpoint {
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     ProjectFacade pF = ProjectFacade.geProjectFacade(EMF);
+    UserFacade uF = UserFacade.getUserFacade(EMF);
 
 
     @POST
     @Path("create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("admin")
     public String createProject(String proj) {
         Proj project = GSON.fromJson(proj, Proj.class);
 
@@ -42,5 +46,17 @@ public class ProjectEndpoint {
     List<ProjDTO> dtoList = pF.listAsDTO(pF.listOfAllProjects());
 
         return GSON.toJson(dtoList);
+    }
+    @PUT
+    @Path("assign/{developerandproj}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("admin")
+    public String addDevToProject(@PathParam("developerandproj") String developerAndProj){
+        String[] arr = developerAndProj.split(",");
+        String dev = arr[0];
+        String proj = arr[1];
+
+        pF.assignDevToProject(dev, proj);
+        return "";
     }
 }
