@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
@@ -26,8 +28,8 @@ public class Proj implements Serializable {
   private String description;
 
 
-   @OneToMany
-    @JoinColumn(name="name")
+    @OneToMany
+    @CascadeOnDelete
     private List<ProjectHours> projectHours = new ArrayList<>();
 
    @JoinTable(name = "dev_projects", joinColumns = {
@@ -76,6 +78,9 @@ public class Proj implements Serializable {
     this.devList = devList;
   }
 
+  public List<ProjectHours> getProjectHours() {
+    return projectHours;
+  }
 /*
   public void addProject(Project proj){
       projectsList.add(proj);

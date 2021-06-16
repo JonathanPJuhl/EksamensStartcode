@@ -93,6 +93,38 @@ public class Developer implements Serializable {
       projectsList.add(proj);
     }*/
 
+  public double getBillingPrHour() {
+    return billingPrHour;
+  }
+
+  public void setBillingPrHour(double billingPrHour) {
+    this.billingPrHour = billingPrHour;
+  }
+
+  public String getPhoneNr() {
+    return phoneNr;
+  }
+
+  public void setPhoneNr(String phoneNr) {
+    this.phoneNr = phoneNr;
+  }
+
+  public String getDevName() {
+    return devName;
+  }
+
+  public void setDevName(String devName) {
+    this.devName = devName;
+  }
+
+  public List<Proj> getProjectsList() {
+    return projectsList;
+  }
+
+  public void setProjectsList(List<Proj> projectsList) {
+    this.projectsList = projectsList;
+  }
+
   public String getEmail() {
     return email;
   }
