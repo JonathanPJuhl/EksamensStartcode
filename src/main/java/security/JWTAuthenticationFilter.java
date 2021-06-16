@@ -88,7 +88,7 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
      return new UserPrincipal(username, rolesArray);
 
    } else {
-     throw new JOSEException("Developer could not be extracted from token");
+     throw new JOSEException("User could not be extracted from token");
    }
  }
 }
