@@ -140,19 +140,19 @@ public class LoginEndpointTest {
 
     @Test
     public void testRestForUser() {
-        login("user", "test");
+        login("developer", "test");
         given()
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
                 .get("/user/user").then()
                 .statusCode(200)
-                .body("msg", equalTo("Welcome user"));
+                .body("msg", equalTo("Welcome developer"));
     }
 
     @Test
     public void testAutorizedUserCannotAccesAdminPage() {
-        login("user", "test");
+        login("developer", "test");
         given()
                 .contentType("application/json")
                 .header("x-access-token", securityToken)

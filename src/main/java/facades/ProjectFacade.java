@@ -5,6 +5,7 @@ import security.errorhandling.AuthenticationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,14 @@ public class ProjectFacade {
         em.merge(project);
         em.getTransaction().commit();
         em.close();
+    }
+
+    public void addHoursToProj(HourRecorderDTO dto) {
+        EntityManager em = emf.createEntityManager();
+        UserFacade uF = UserFacade.getUserFacade(emf);
+        Developer developer = em.find(Developer.class, dto.getEmail());
+        Proj project = findProjByName(dto.getProjectName());
+        //Query addTime = em.createQuery("Update ")
     }
 }
 

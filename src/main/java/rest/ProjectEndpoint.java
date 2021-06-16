@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.Developer;
+import entities.HourRecorderDTO;
 import entities.Proj;
 import entities.ProjDTO;
 import facades.ProjectFacade;
@@ -60,15 +61,13 @@ public class ProjectEndpoint {
         return "";
     }
     @PUT
-    @Path("record/{developerandproj}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("record")
+    @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed("developer")
-    public String addHoursToProject(@PathParam("developerandproj") String developerAndProj){
-        String[] arr = developerAndProj.split(",");
-        String dev = arr[0];
-        String proj = arr[1];
+    public String addHoursToProject(String developerProjAndTimeSpent){
+       HourRecorderDTO dto = GSON.fromJson(developerProjAndTimeSpent, HourRecorderDTO.class);
 
-        pF.assignDevToProject(dev, proj);
+       pF.addHoursToProj(dto);
         return "";
     }
 }

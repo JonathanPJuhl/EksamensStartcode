@@ -3,12 +3,15 @@ package entities;
 public class HourRecorderDTO {
     private String email;
     private String projectName;
+    private String userStory;
     private double hoursSpent;
 
-    public HourRecorderDTO(String email, String projectName, double hoursSpent) {
+
+    public HourRecorderDTO(String email, String projectName, double hoursSpent, String userStory) {
         this.email = email;
         this.projectName = projectName;
         this.hoursSpent = hoursSpent;
+        this.userStory = userStory;
     }
 
     @Override
@@ -16,8 +19,17 @@ public class HourRecorderDTO {
         return "HourRecorderDTO{" +
                 "email='" + email + '\'' +
                 ", projectName='" + projectName + '\'' +
+                ", userStory='" + userStory + '\'' +
                 ", hoursSpent=" + hoursSpent +
                 '}';
+    }
+
+    public String getUserStory() {
+        return userStory;
+    }
+
+    public void setUserStory(String userStory) {
+        this.userStory = userStory;
     }
 
     public String getEmail() {
