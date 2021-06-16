@@ -11,6 +11,12 @@ public class SetupTestUsers {
     EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
     EntityManager em = emf.createEntityManager();
 
+    // IMPORTAAAAAAAAAANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // This breaks one of the MOST fundamental security rules in that it ships with default users and passwords
+    // CHANGE the three passwords below, before you uncomment and execute the code below
+    // Also, either delete this file, when users are created or rename and add to .gitignore
+    // Whatever you do DO NOT COMMIT and PUSH with the real passwords
+
     Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
     Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
     Proj proj = new Proj("a", "a");
@@ -34,12 +40,17 @@ public class SetupTestUsers {
     hours.setDev(developer);
     em.persist(hours);
 
+
+
+
     //developer.addProject(proj);
     em.persist(userRole);
     em.persist(adminRole);
 
+
     em.persist(developer);
     em.persist(admin);
+
 
     //em.persist(both);
     em.getTransaction().commit();
@@ -47,7 +58,6 @@ public class SetupTestUsers {
     System.out.println("Testing developer with OK password: " + developer.verifyPassword("test"));
     System.out.println("Testing developer with wrong password: " + developer.verifyPassword("test1"));
     System.out.println("Created TEST Users");
-
   }
 
   public static void main(String[] args) {
