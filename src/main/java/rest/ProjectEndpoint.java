@@ -2,10 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import entities.Developer;
-import entities.HourRecorderDTO;
-import entities.Proj;
-import entities.ProjDTO;
+import entities.*;
 import facades.ProjectFacade;
 import facades.UserFacade;
 import utils.EMF_Creator;
@@ -69,5 +66,13 @@ public class ProjectEndpoint {
 
        pF.addHoursToProj(dto);
         return "";
+    }
+    //Nullpoint ifbm denne
+    @GET
+    @Path("alluserstoriesforgivenproject/{projectName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String allUserStories(@PathParam("projectName") String projectName){
+
+        return  GSON.toJson(pF.getAllUserstoriesForGivenProject(projectName));
     }
 }

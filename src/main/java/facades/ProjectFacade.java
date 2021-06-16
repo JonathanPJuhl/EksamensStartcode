@@ -89,7 +89,32 @@ public class ProjectFacade {
         UserFacade uF = UserFacade.getUserFacade(emf);
         Developer developer = em.find(Developer.class, dto.getEmail());
         Proj project = findProjByName(dto.getProjectName());
-        //Query addTime = em.createQuery("Update ")
+        Query addTime = em.createQuery("Update ProjectHours ph SET ph.hoursSpent=:hoursSpent WHERE ph.project.name=:projectName AND ph.userStory =: userStory");
+        addTime.setParameter("hoursSpent", dto.getHoursSpent());
+        addTime.setParameter("projectName", dto.getProjectName());
+        addTime.setParameter("userStory", dto.getUserStory());
+        em.close();
+
+    }
+
+    public UserStoryHourDTO getAllUserstoriesForGivenProject(String projectName) {
+        EntityManager em = emf.createEntityManager();
+        //TypedQuery<ProjectHours> findStories = em.createQuery("SELECT p FROM ProjectHours p join Proj pp WHERE pp.name=:projectName", ProjectHours.class);
+        TypedQuery<String> story = em.createQuery("SELECT h.userStory from Proj p JOIN p.projectHours h WHERE p.name=:projectName", String.class);
+        story.setParameter("projectName", projectName);
+      //  System.out.println(findStories.toString());
+        //findStories.setParameter("projectName", projectName);
+        //List<ProjectHours> foundStories = findStories.getResultList();
+        List<String> foundStories = story.getResultList();
+        System.out.println("SIZE: " + foundStories.size());
+        UserStoryHourDTO stories = new UserStoryHourDTO(null, null);
+        /*for(int i=0; i<foundStories.size(); i++){
+            System.out.println(foundStories.get(i));
+            stories.addUserStories(foundStories.get(i));
+        }*/
+        stories.setUserStories(foundStories);
+        stories.setProjectName(projectName);
+        return stories;
     }
 }
 
