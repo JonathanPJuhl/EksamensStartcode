@@ -52,13 +52,9 @@ public class Developer implements Serializable {
   @ManyToMany
   private List<Role> roleList = new ArrayList<>();
 
- /* @JoinTable(name = "dev_projects", joinColumns = {
-          @JoinColumn(name = "email", referencedColumnName = "email")}, inverseJoinColumns = {
-          @JoinColumn(name = "project_name", referencedColumnName = "project_name")})
-  @ManyToMany
-  private List<Project> projectsList = new ArrayList<>();
+  @ManyToMany(mappedBy = "devList")
+  private List<Proj> projectsList = new ArrayList<>();
 
-*/
 
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {

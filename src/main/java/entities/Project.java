@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "Project")
 @NamedQuery(name = "Project.deleteAllRows", query = "DELETE from Project")
-public class Project  implements Serializable {
+public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,6 +35,14 @@ public class Project  implements Serializable {
     @ManyToMany(mappedBy = "projectsList")
     private List<Developer> developerList = new ArrayList<>();
 */
+      @JoinTable(name = "dev_projects", joinColumns = {
+          @JoinColumn(name = "project_name", referencedColumnName = "project_name")}, inverseJoinColumns = {
+          @JoinColumn(name = "email", referencedColumnName = "email")})
+  @ManyToMany
+  private List<Project> projectsList = new ArrayList<>();
+
+
+
 
     public Project(String name, String description) {
         this.name = name;

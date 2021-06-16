@@ -1,10 +1,7 @@
 package utils;
 
 
-import entities.Developer;
-import entities.Project;
-import entities.ProjectHours;
-import entities.Role;
+import entities.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -53,13 +50,16 @@ public class SetupTestUsers {
 
     Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
     Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
-    Project proj = new Project("a", "a");
-    //ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
+    Proj proj = new Proj("a", "a");
+    ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
 
     if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")/*||both.getPassword().equals("test")*/)
       throw new UnsupportedOperationException("You have not changed the passwords");
 
     em.getTransaction().begin();
+    proj.addProjectHours(hours);
+    proj.addDev(developer);
+    em.persist(proj);
     Role userRole = new Role("developer");
     Role adminRole = new Role("admin");
 
@@ -67,11 +67,11 @@ public class SetupTestUsers {
     admin.addRole(adminRole);
  //   both.addRole(userRole);
 
-   // em.persist(proj);
-   // em.persist(hours);
+  hours.setProject(proj);
+    em.persist(hours);
 
 
-   // proj.addProjectHours(hours);
+
 
     //developer.addProject(proj);
     em.persist(userRole);

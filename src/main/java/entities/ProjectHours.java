@@ -20,15 +20,16 @@ public class ProjectHours implements Serializable {
 
 
     @NotNull
-    @Column(name = "desc")
+    @Column(name = "description")
     private String description;
 
 
     @Column(name = "hours_spent")
     private double hoursSpent;
 
-   /* @ManyToOne(fetch = FetchType.LAZY)
-    private Project project;*/
+ @ManyToOne(fetch = FetchType.LAZY)
+    private Proj project;
+
 
     public ProjectHours(String userStory, String description, double hoursSpent) {
         this.userStory = userStory;
@@ -63,11 +64,12 @@ public class ProjectHours implements Serializable {
         this.hoursSpent = hoursSpent;
     }
 
-   /* public Project getProject() {
+ public Proj getProject() {
         return project;
     }
 
-    public void setProject(Project project) {
+    public void setProject(Proj project) {
         this.project = project;
-    }*/
+    }
+
 }
