@@ -11,30 +11,43 @@ public class SetupTestUsers {
     EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
     EntityManager em = emf.createEntityManager();
 
+    Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
+    Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
+    Proj proj = new Proj("a", "a");
+    ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
 
-    Developer developer = new Developer("developer", "usertest");
-    Developer admin = new Developer("admin", "admintest");
-    Developer both = new Developer("user_admin", "bothtest");
-
-    if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")||both.getPassword().equals("test"))
+    if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")/*||both.getPassword().equals("test")*/)
       throw new UnsupportedOperationException("You have not changed the passwords");
 
     em.getTransaction().begin();
+    proj.addProjectHours(hours);
+    proj.addDev(developer);
+    em.persist(proj);
     Role userRole = new Role("developer");
     Role adminRole = new Role("admin");
 
-    em.persist(userRole);
-    em.persist(adminRole);
-    em.persist(developer);
     developer.addRole(userRole);
     admin.addRole(adminRole);
-    both.addRole(userRole);
-    both.addRole(adminRole);
+    //   both.addRole(userRole);
+
+    hours.setProject(proj);
+    hours.setDev(developer);
+    em.persist(hours);
+
+    //developer.addProject(proj);
+    em.persist(userRole);
+    em.persist(adminRole);
+
+    em.persist(developer);
+    em.persist(admin);
+
+    //em.persist(both);
     em.getTransaction().commit();
     System.out.println("PW: " + developer.getPassword());
     System.out.println("Testing developer with OK password: " + developer.verifyPassword("test"));
     System.out.println("Testing developer with wrong password: " + developer.verifyPassword("test1"));
     System.out.println("Created TEST Users");
+
   }
 
   public static void main(String[] args) {

@@ -138,5 +138,14 @@ public class ProjectFacade {
         }
         return totalHours;
     }
+
+    public List<ProjectHours> getInvoice(String project) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        TypedQuery<ProjectHours> createInvoice = em.createQuery("SELECT ph FROM ProjectHours ph WHERE ph.project.name=:project", ProjectHours.class);
+        createInvoice.setParameter("project", project);
+        List<ProjectHours> invoice = createInvoice.getResultList();
+        return invoice;
+    }
 }
 

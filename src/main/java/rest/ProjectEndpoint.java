@@ -89,5 +89,10 @@ public class ProjectEndpoint {
         return  GSON.toJson(pF.getAllUserstoriesForGivenProject(projectName));
     }
     @GET
-
+    @Path("invoice/{project}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String invoice(@PathParam("project") String project){
+        List<ProjectHours> invoice = pF.getInvoice(project);
+        return GSON.toJson(invoice);
+    }
 }
