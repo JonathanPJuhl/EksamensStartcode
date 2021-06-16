@@ -72,7 +72,7 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user")
-    @RolesAllowed({"user"})
+    @RolesAllowed({"developer"})
     public String getFromUser() {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Welcome " + thisuser + "\"}";

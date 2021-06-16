@@ -45,6 +45,7 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
      }
      try {
        UserPrincipal user = getUserPrincipalFromTokenIfValid(token);
+         System.out.println("USER : "+user.getName());
        //What if the client had logged out????
        request.setSecurityContext(new JWTSecurityContext(user, request));
      } catch (AuthenticationException | ParseException | JOSEException ex) {

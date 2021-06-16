@@ -1,14 +1,13 @@
 package facades;
 
-import entities.Developer;
-import entities.Proj;
-import entities.Project;
-import entities.Role;
+import entities.*;
 import security.errorhandling.AuthenticationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lam@cphbusiness.dk
@@ -42,6 +41,20 @@ public class ProjectFacade {
         em.getTransaction().commit();
         em.close();
         return project;
+    }
+    public List<Proj> listOfAllProjects(){
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Proj> findAll = em.createQuery("SELECT p FROM Proj p", Proj.class);
+        List<Proj> found = findAll.getResultList();
+        return found;
+
+    }
+    public List<ProjDTO> listAsDTO(List<Proj> projs){
+        List<ProjDTO> list = new ArrayList<>();
+        for(Proj proj: projs){
+            list.add(new ProjDTO(proj.getName(), proj.getDescription()));
+        }
+        return list;
     }
 }
 

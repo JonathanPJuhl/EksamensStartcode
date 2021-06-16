@@ -1,3 +1,4 @@
+/*
 package entities;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class Project implements Serializable {
     @Column(name = "desc")
     private String description;
 
+*/
 /*
     @OneToMany
     @JoinColumn(name="name")
@@ -34,7 +36,8 @@ public class Project implements Serializable {
 
     @ManyToMany(mappedBy = "projectsList")
     private List<Developer> developerList = new ArrayList<>();
-*/
+*//*
+
       @JoinTable(name = "dev_projects", joinColumns = {
           @JoinColumn(name = "project_name", referencedColumnName = "project_name")}, inverseJoinColumns = {
           @JoinColumn(name = "email", referencedColumnName = "email")})
@@ -72,7 +75,8 @@ public class Project implements Serializable {
         this.description = description;
     }
 
-  /*  public List<ProjectHours> getProjectHours() {
+  */
+/*  public List<ProjectHours> getProjectHours() {
         return projectHours;
     }
 
@@ -81,7 +85,8 @@ public class Project implements Serializable {
     }
     public void addProjectHours(ProjectHours hours){
         projectHours.add(hours);
-    }*/
+    }*//*
+
 
     @Override
     public String toString() {
@@ -91,3 +96,4 @@ public class Project implements Serializable {
                 '}';
     }
 }
+*/
