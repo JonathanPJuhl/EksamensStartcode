@@ -26,7 +26,6 @@ before_script:
 
 #- sudo apt-get clean
 #- sudo rm -r /var/lib/apt/lists/*
-
 # HACK to fix a problem on travis
 - sudo apt-get update || true
 - sudo apt-get install -y debconf-utils
