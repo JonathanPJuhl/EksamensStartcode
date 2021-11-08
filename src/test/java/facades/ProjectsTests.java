@@ -162,6 +162,7 @@ public class ProjectsTests {
         pF.addHoursToProj(dto2);
         EntityManager em = emf.createEntityManager();
         assertEquals(pF.getHoursSpentOnUserstories("developer@DEV.DK", "a"), 1000);
+
     }
     @Test
     public void invoiceShouldBeShownCorrectly(){

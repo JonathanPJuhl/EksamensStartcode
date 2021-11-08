@@ -11,6 +11,7 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import entities.EndUser;
 import facades.UserFacade;
 import java.util.Date;
 import java.util.List;
@@ -54,12 +55,14 @@ public class  LoginEndpoint {
         }
 
         try {
-            Developer developer = USER_FACADE.getVeryfiedUser(username, password);
-            String token = createToken(username, developer.getRolesAsStrings());
+            // make check for role
+            EndUser endUser = USER_FACADE.getVeryfiedUser(username, password);
+            // Developer developer = USER_FACADE.getVeryfiedDeveloper(username, password);
+            String token = createToken(username, endUser.getRolesAsStrings());
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("username", username);
             responseJson.addProperty("token", token);
-            System.out.println(developer.toString());
+            System.out.println(endUser.toString());
             return Response.ok(new Gson().toJson(responseJson)).build();
 
         } catch (JOSEException | AuthenticationException ex) {

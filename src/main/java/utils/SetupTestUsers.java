@@ -17,27 +17,29 @@ public class SetupTestUsers {
     // Also, either delete this file, when users are created or rename and add to .gitignore
     // Whatever you do DO NOT COMMIT and PUSH with the real passwords
 
-    Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
-    Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
+    //  Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
+    EndUser endUser = new EndUser("developer@DEV.DK", "usertest" );
+    // Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
     Proj proj = new Proj("a", "a");
     ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
 
-    if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")/*||both.getPassword().equals("test")*/)
-      throw new UnsupportedOperationException("You have not changed the passwords");
+   /* if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")*//*||both.getPassword().equals("test")*//*)
+      throw new UnsupportedOperationException("You have not changed the passwords");*/
 
     em.getTransaction().begin();
     proj.addProjectHours(hours);
-    proj.addDev(developer);
+    //proj.addDev(developer);
     em.persist(proj);
     Role userRole = new Role("developer");
     Role adminRole = new Role("admin");
 
-    developer.addRole(userRole);
-    admin.addRole(adminRole);
+    //developer.addRole(userRole);
+    //admin.addRole(adminRole);
+    endUser.addRole(userRole);
     //   both.addRole(userRole);
 
     hours.setProject(proj);
-    hours.setDev(developer);
+    //hours.setDev(developer);
     em.persist(hours);
 
 
@@ -48,15 +50,16 @@ public class SetupTestUsers {
     em.persist(adminRole);
 
 
-    em.persist(developer);
-    em.persist(admin);
+    //em.persist(developer);
+    //em.persist(admin);
+    em.persist(endUser);
 
 
     //em.persist(both);
     em.getTransaction().commit();
-    System.out.println("PW: " + developer.getPassword());
-    System.out.println("Testing developer with OK password: " + developer.verifyPassword("test"));
-    System.out.println("Testing developer with wrong password: " + developer.verifyPassword("test1"));
+   // System.out.println("PW: " + developer.getPassword());
+   // System.out.println("Testing developer with OK password: " + developer.verifyPassword("test"));
+   // System.out.println("Testing developer with wrong password: " + developer.verifyPassword("test1"));
     System.out.println("Created TEST Users");
   }
 
@@ -71,27 +74,29 @@ public class SetupTestUsers {
     // Also, either delete this file, when users are created or rename and add to .gitignore
     // Whatever you do DO NOT COMMIT and PUSH with the real passwords
 
-    Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
-    Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
+    //  Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
+    EndUser endUser = new EndUser("developer@DEV.DK", "usertest" );
+    // Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
     Proj proj = new Proj("a", "a");
     ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
 
-    if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")/*||both.getPassword().equals("test")*/)
-      throw new UnsupportedOperationException("You have not changed the passwords");
+    /* if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")*//*||both.getPassword().equals("test")*//*)
+      throw new UnsupportedOperationException("You have not changed the passwords");*/
 
     em.getTransaction().begin();
     proj.addProjectHours(hours);
-    proj.addDev(developer);
+    //proj.addDev(developer);
     em.persist(proj);
     Role userRole = new Role("developer");
     Role adminRole = new Role("admin");
 
-    developer.addRole(userRole);
-    admin.addRole(adminRole);
- //   both.addRole(userRole);
+    //developer.addRole(userRole);
+    //admin.addRole(adminRole);
+    endUser.addRole(userRole);
+    //   both.addRole(userRole);
 
-  hours.setProject(proj);
-  hours.setDev(developer);
+    hours.setProject(proj);
+    //hours.setDev(developer);
     em.persist(hours);
 
 
@@ -102,17 +107,17 @@ public class SetupTestUsers {
     em.persist(adminRole);
 
 
-    em.persist(developer);
-    em.persist(admin);
+    //em.persist(developer);
+    //em.persist(admin);
+    em.persist(endUser);
 
 
     //em.persist(both);
     em.getTransaction().commit();
-    System.out.println("PW: " + developer.getPassword());
-    System.out.println("Testing developer with OK password: " + developer.verifyPassword("test"));
-    System.out.println("Testing developer with wrong password: " + developer.verifyPassword("test1"));
+    // System.out.println("PW: " + developer.getPassword());
+    // System.out.println("Testing developer with OK password: " + developer.verifyPassword("test"));
+    // System.out.println("Testing developer with wrong password: " + developer.verifyPassword("test1"));
     System.out.println("Created TEST Users");
-   
   }
 
 }

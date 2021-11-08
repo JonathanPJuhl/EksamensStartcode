@@ -2,6 +2,7 @@ package facades;
 
 import entities.Developer;
 import entities.DeveloperDTO;
+import entities.EndUser;
 import entities.Role;
 
 import javax.enterprise.inject.Typed;
@@ -39,7 +40,21 @@ public class UserFacade {
         return instance;
     }
 
-    public Developer getVeryfiedUser(String username, String password) throws AuthenticationException {
+    public EndUser getVeryfiedUser(String username, String password) throws AuthenticationException {
+        EntityManager em = emf.createEntityManager();
+        EndUser endUser;
+        try {
+            endUser = em.find(EndUser.class, username);
+            if (endUser == null || !endUser.verifyPassword(password)) {
+                throw new AuthenticationException("Invalid username or password");
+            }
+        } finally {
+            em.close();
+        }
+        return endUser;
+    }
+
+    public Developer getVeryfiedDeveloper(String username, String password) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();
         Developer developer;
         try {
@@ -53,7 +68,24 @@ public class UserFacade {
         return developer;
     }
 
-    public Developer createUser(Developer developer) {
+    public EndUser createUser(EndUser endUser) {
+
+        EntityManager em = emf.createEntityManager();
+
+        EndUser userforPersist = new EndUser(endUser.getUsername(), endUser.getPassword(), endUser.getRecoveryquestion(), endUser.getAnswer());
+
+        em.getTransaction().begin();
+
+        Role userRole = new Role("developer");
+
+        userforPersist.addRole(userRole);
+
+        em.persist(userforPersist);
+
+        em.getTransaction().commit();
+        return userforPersist;
+    }
+    public Developer createDeveloper(Developer developer) {
 
         EntityManager em = emf.createEntityManager();
 

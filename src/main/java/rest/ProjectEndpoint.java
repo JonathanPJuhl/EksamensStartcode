@@ -65,7 +65,6 @@ public class ProjectEndpoint {
 
     @GET
     @Path("myrecords/{dev}")
-    @RolesAllowed("developer")
     @Produces(MediaType.APPLICATION_JSON)
     public String myHours(@PathParam("dev") String devAndProject){
         String[] both = devAndProject.split(",");

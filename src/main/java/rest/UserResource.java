@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.Developer;
+import entities.EndUser;
 import entities.ResetPasswordDTO;
 import entities.DeveloperDTO;
 import facades.UserFacade;
@@ -50,9 +51,11 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("create")
     public String createUser(String user) {
-        Developer developerForCreation = GSON.fromJson(user, Developer.class);
-        Developer developerForReturn = facade.createUser(developerForCreation);
-        return GSON.toJson(developerForReturn);
+        EndUser endUser = GSON.fromJson(user, EndUser.class);
+        //Developer developerForCreation = GSON.fromJson(user, Developer.class);
+        //Developer developerForReturn = facade.createUser(developerForCreation);
+        EndUser endUserForReturn = facade.createUser(endUser);
+        return GSON.toJson(endUser);
     }
     @POST
     @Produces(MediaType.APPLICATION_JSON)
