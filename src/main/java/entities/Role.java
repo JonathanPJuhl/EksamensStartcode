@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
@@ -24,7 +25,7 @@ public class Role implements Serializable {
     private String roleName;
     
     @ManyToMany(mappedBy = "roleList")
-    private List<EndUser> endUserList;
+    private List<User> UserList;
 
     public Role() {
     }
@@ -41,11 +42,11 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-    public List<EndUser> getUserList() {
-        return endUserList;
+    public List<User> getUserList() {
+        return UserList;
     }
 
-    public void setUserList(List<EndUser> developerList) {
-        this.endUserList = developerList;
+    public void setUserList(List<User> developerList) {
+        this.UserList = developerList;
     }   
 }

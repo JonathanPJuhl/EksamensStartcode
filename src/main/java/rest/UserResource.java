@@ -2,8 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import entities.Developer;
-import entities.EndUser;
+import entities.User;
 import entities.ResetPasswordDTO;
 import entities.DeveloperDTO;
 import facades.UserFacade;
@@ -38,24 +37,21 @@ public class UserResource {
         return "{\"msg\":\"Hello anonymous\"}";
     }
 
-    @GET
-    @Path("all")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getAllDevelopers() {
-        return GSON.toJson(facade.listOfAllDevs());
-    }
+//    @GET
+//    @Path("all")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String getAllDevelopers() {
+//        return GSON.toJson(facade.listOfAllDevs());
+//    }
 
-    //Just to verify if the database is setup
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("create")
     public String createUser(String user) {
-        EndUser endUser = GSON.fromJson(user, EndUser.class);
-        //Developer developerForCreation = GSON.fromJson(user, Developer.class);
-        //Developer developerForReturn = facade.createUser(developerForCreation);
-        EndUser endUserForReturn = facade.createUser(endUser);
-        return GSON.toJson(endUser);
+        User endUser = GSON.fromJson(user, User.class);
+        User endUserForReturn = facade.createUser(endUser);
+        return GSON.toJson(endUserForReturn);
     }
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,9 +69,8 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("newpassword")
     public String createNewPass(String emailAndNewPass) {
-        Developer developer = GSON.fromJson(emailAndNewPass, Developer.class);
-        System.out.println(developer.toString());
-        facade.updatePasswordForUser(developer);
+        User user = GSON.fromJson(emailAndNewPass, User.class);
+        facade.updatePasswordForUser(user);
         return "{\"resp\":\"success\"}";
     }
 
@@ -94,8 +89,8 @@ public class UserResource {
     @Path("account/{username}")
    // @RolesAllowed({"user"})
     public String getAccountInfo(@PathParam("username") String username) {
-        Developer developer = facade.findUserByUsername(username);
-        DeveloperDTO userDTO = new DeveloperDTO(developer.getEmail());
+        User user = facade.findUserByUsername(username);
+        DeveloperDTO userDTO = new DeveloperDTO(user.getUsername());
         return GSON.toJson(userDTO);
     }
     @GET

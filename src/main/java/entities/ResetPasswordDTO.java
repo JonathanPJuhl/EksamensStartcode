@@ -1,7 +1,5 @@
 package entities;
 
-
-
 public class ResetPasswordDTO {
 
     private String email;

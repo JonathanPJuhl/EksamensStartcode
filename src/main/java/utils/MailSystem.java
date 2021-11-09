@@ -1,7 +1,7 @@
 package utils;
 
 import entities.ResetPasswordDTO;
-import entities.Developer;
+import entities.User;
 import facades.UserFacade;
 
 import java.util.Properties;
@@ -23,7 +23,7 @@ public class MailSystem {
         String answerToSecurityQuestion = recipientAndSecurityAnswer.getAnswerToSecurityQuestion();
 
         UserFacade userF = UserFacade.getUserFacade(EMF);
-        Developer developer = userF.findUserByUsername(recipient);
+        User user = userF.findUserByUsername(recipient);
 
 
 

@@ -18,18 +18,18 @@ public class SetupTestUsers {
     // Whatever you do DO NOT COMMIT and PUSH with the real passwords
 
     //  Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
-    EndUser endUser = new EndUser("developer@DEV.DK", "usertest" );
+    User endUser = new User("developer@DEV.DK", "usertest" );
     // Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
-    Proj proj = new Proj("a", "a");
-    ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
+    // Proj proj = new Proj("a", "a");
+    // ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
 
    /* if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")*//*||both.getPassword().equals("test")*//*)
       throw new UnsupportedOperationException("You have not changed the passwords");*/
 
     em.getTransaction().begin();
-    proj.addProjectHours(hours);
+    // proj.addProjectHours(hours);
     //proj.addDev(developer);
-    em.persist(proj);
+    // em.persist(proj);
     Role userRole = new Role("developer");
     Role adminRole = new Role("admin");
 
@@ -38,9 +38,9 @@ public class SetupTestUsers {
     endUser.addRole(userRole);
     //   both.addRole(userRole);
 
-    hours.setProject(proj);
+    // hours.setProject(proj);
     //hours.setDev(developer);
-    em.persist(hours);
+    // em.persist(hours);
 
 
 
@@ -75,18 +75,18 @@ public class SetupTestUsers {
     // Whatever you do DO NOT COMMIT and PUSH with the real passwords
 
     //  Developer developer = new Developer("developer@DEV.DK", 200, "12345678", "kAJ", "usertest" );
-    EndUser endUser = new EndUser("developer@DEV.DK", "usertest" );
+    User endUser = new User("developer@DEV.DK", "usertest" );
     // Developer admin = new Developer("admin@admin.dk", 500, "12345679", "Børge", "admintest");
-    Proj proj = new Proj("a", "a");
-    ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
+   // Proj proj = new Proj("a", "a");
+   // ProjectHours hours = new ProjectHours("US1", "1st userstory", 200);
 
     /* if(admin.getPassword().equals("test")|| developer.getPassword().equals("test")*//*||both.getPassword().equals("test")*//*)
       throw new UnsupportedOperationException("You have not changed the passwords");*/
 
     em.getTransaction().begin();
-    proj.addProjectHours(hours);
+    //proj.addProjectHours(hours);
     //proj.addDev(developer);
-    em.persist(proj);
+    //em.persist(proj);
     Role userRole = new Role("developer");
     Role adminRole = new Role("admin");
 
@@ -95,9 +95,9 @@ public class SetupTestUsers {
     endUser.addRole(userRole);
     //   both.addRole(userRole);
 
-    hours.setProject(proj);
+    // hours.setProject(proj);
     //hours.setDev(developer);
-    em.persist(hours);
+    // em.persist(hours);
 
 
 

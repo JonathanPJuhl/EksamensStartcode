@@ -1,9 +1,9 @@
 
 package rest;
 
-import entities.Developer;
 import entities.Role;
 
+import entities.User;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
@@ -66,21 +66,21 @@ public class LoginEndpointTest {
         try {
             em.getTransaction().begin();
             //Delete existing users and roles to get a "fresh" database
-            em.createQuery("delete from Developer").executeUpdate();
+            em.createQuery("delete from User").executeUpdate();
             em.createQuery("delete from Role").executeUpdate();
 
             Role userRole = new Role("developer");
             Role adminRole = new Role("admin");
-            Developer developer = new Developer("developer", "test");
-            developer.addRole(userRole);
-            Developer admin = new Developer("admin", "test");
+            User user = new User("developer", "test");
+            user.addRole(userRole);
+            User admin = new User("admin", "test");
             admin.addRole(adminRole);
-            Developer both = new Developer("user_admin", "test");
+            User both = new User("user_admin", "test");
             both.addRole(userRole);
             both.addRole(adminRole);
             em.persist(userRole);
             em.persist(adminRole);
-            em.persist(developer);
+            em.persist(user);
             em.persist(admin);
             em.persist(both);
             //System.out.println("Saved test data to database");

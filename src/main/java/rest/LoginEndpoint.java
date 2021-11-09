@@ -11,13 +11,13 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import entities.EndUser;
+import entities.User;
 import facades.UserFacade;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import entities.Developer;
+
 import errorhandling.API_Exception;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -40,6 +40,7 @@ public class  LoginEndpoint {
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final UserFacade USER_FACADE = UserFacade.getUserFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,22 +56,19 @@ public class  LoginEndpoint {
         }
 
         try {
-            // make check for role
-            EndUser endUser = USER_FACADE.getVeryfiedUser(username, password);
-            // Developer developer = USER_FACADE.getVeryfiedDeveloper(username, password);
-            String token = createToken(username, endUser.getRolesAsStrings());
+            User user = USER_FACADE.getVeryfiedUser(username, password);
+            String token = createToken(username, user.getRolesAsStrings());
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("username", username);
             responseJson.addProperty("token", token);
-            System.out.println(endUser.toString());
             return Response.ok(new Gson().toJson(responseJson)).build();
-
-        } catch (JOSEException | AuthenticationException ex) {
-            if (ex instanceof AuthenticationException) {
-                throw (AuthenticationException) ex;
-            }
-            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
+            catch (JOSEException | AuthenticationException ex) {
+                if (ex instanceof AuthenticationException) {
+                    throw (AuthenticationException) ex;
+                }
+                Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
         throw new AuthenticationException("Invalid username or password! Please try again");
     }
 
