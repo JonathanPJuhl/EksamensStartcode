@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.User;
 import entities.ResetPasswordDTO;
-import entities.DeveloperDTO;
 import facades.UserFacade;
 import utils.EMF_Creator;
 import utils.MailSystem;
@@ -37,12 +36,12 @@ public class UserResource {
         return "{\"msg\":\"Hello anonymous\"}";
     }
 
-//    @GET
-//    @Path("all")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public String getAllDevelopers() {
-//        return GSON.toJson(facade.listOfAllDevs());
-//    }
+    @GET
+    @Path("all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllDevelopers() {
+        return GSON.toJson(facade.listOfAllUsers());
+    }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -87,11 +86,10 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("account/{username}")
-   // @RolesAllowed({"user"})
+    @RolesAllowed({"user"})
     public String getAccountInfo(@PathParam("username") String username) {
         User user = facade.findUserByUsername(username);
-        DeveloperDTO userDTO = new DeveloperDTO(user.getUsername());
-        return GSON.toJson(userDTO);
+        return GSON.toJson(user);
     }
     @GET
     @Produces(MediaType.APPLICATION_JSON)

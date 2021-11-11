@@ -1,6 +1,5 @@
 package facades;
 
-import entities.DeveloperDTO;
 import entities.User;
 import entities.Role;
 
@@ -126,18 +125,14 @@ public class UserFacade {
 
     }
 
-//    public List<DeveloperDTO> listOfAllDevs() {
-//        EntityManager em = emf.createEntityManager();
-//        TypedQuery<String> findDevs = em.createQuery("SELECT d.email FROM Developer d JOIN d.roleList r WHERE r.roleName= :developer", String.class);
-//        findDevs.setParameter("developer", "developer");
-//        List<String> foundDevs = findDevs.getResultList();
-//        List<DeveloperDTO> dto = new ArrayList<>();
-//        for(String email: foundDevs){
-//            dto.add(new DeveloperDTO(email));
-//        }
-//
-//
-//        return dto;
-//    }
+    public List<String> listOfAllUsers() {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<String> findUsers = em.createQuery("SELECT u.username FROM User u JOIN u.roleList r WHERE r.roleName= :user", String.class);
+        findUsers.setParameter("user", "user");
+        List<String> foundUsers = findUsers.getResultList();
+        List<String> allUsers = new ArrayList<>();
+        allUsers.addAll(foundUsers);
+        return allUsers;
+    }
 }
 
