@@ -40,6 +40,12 @@ public class User implements Serializable {
     @Column(name = "recovery_answer")
     private String answer;
 
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "profile_text")
+    private String profileText;
+
 
     @JoinTable(name = "user_roles", joinColumns = {
             @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {

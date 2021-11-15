@@ -30,7 +30,7 @@ public class SetupTestUsers {
     // proj.addProjectHours(hours);
     //proj.addDev(developer);
     // em.persist(proj);
-    Role userRole = new Role("developer");
+    Role userRole = new Role("user");
     Role adminRole = new Role("admin");
 
     //developer.addRole(userRole);

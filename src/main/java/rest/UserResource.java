@@ -12,10 +12,7 @@ import utils.SetupTestUsers;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 
 @Path("user")
 public class UserResource {
@@ -76,10 +73,20 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user")
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"user"})
     public String getFromUser() {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Welcome " + thisuser + "\"}";
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("user2")
+    @RolesAllowed({"user"})
+    public String geUser(Request request) {
+        return GSON.toJson(request);
+        //String thisuser = securityContext.getUserPrincipal().getName();
+        //return "{\"msg\": \"Welcome " + thisuser + "\"}";
     }
 
 
@@ -89,8 +96,10 @@ public class UserResource {
     @RolesAllowed({"user"})
     public String getAccountInfo(@PathParam("username") String username) {
         User user = facade.findUserByUsername(username);
+        System.out.println("HER  " + username);
         return GSON.toJson(user);
     }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("admin")
