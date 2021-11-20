@@ -15,8 +15,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.InputStream;
-
+import java.io.*;
 
 @Path("user")
 public class UserResource {
@@ -110,15 +109,22 @@ public class UserResource {
         return "{\"msg\": \"Hello to (admin) Developer: " + thisuser + "\"}";
     }
 
-    @POST
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Path("profilepicture")
-    public void postProfilePic(InputStream uploadedInputStream /*FormDataContentDisposition fileDetail*/) {
-       // MultiMediaFacade mmf = new MultiMediaFacade();
-       // mmf.makeUpload(uploadedInputStream, fileDetail);
-        // https://javatutorial.net/java-file-upload-rest-service
-        // https://stackoverflow.com/questions/48493459/upload-file-using-react-frontend-app-and-spring-java-backend-app
-    }
+  @POST
+  @Path("/uploadfile")
+  public void post(File file) throws FileNotFoundException {
+      Reader reader = new Reader(new FileInputStream(file)) {
+          @Override
+          public int read(char[] cbuf, int off, int len) throws IOException {
+              return 0;
+          }
+
+          @Override
+          public void close() throws IOException {
+
+          }
+      };
+      // ...
+  }
 
     @GET
     @Path("populate")
