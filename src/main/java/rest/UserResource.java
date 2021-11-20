@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.User;
 import entities.ResetPasswordDTO;
+import entities.UserDTO;
+// import facades.MultiMediaFacade;
 import facades.UserFacade;
 import utils.EMF_Creator;
 import utils.MailSystem;
@@ -13,6 +15,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.InputStream;
+
 
 @Path("user")
 public class UserResource {
@@ -79,25 +83,22 @@ public class UserResource {
         return "{\"msg\": \"Welcome " + thisuser + "\"}";
     }
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("user2")
-    @RolesAllowed({"user"})
-    public String geUser(Request request) {
-        return GSON.toJson(request);
-        //String thisuser = securityContext.getUserPrincipal().getName();
-        //return "{\"msg\": \"Welcome " + thisuser + "\"}";
-    }
-
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("account/{username}")
     @RolesAllowed({"user"})
     public String getAccountInfo(@PathParam("username") String username) {
         User user = facade.findUserByUsername(username);
-        System.out.println("HER  " + username);
-        return GSON.toJson(user);
+        return GSON.toJson(new UserDTO(user.getUsername(), user.getProfileText()));
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("account/update")
+    @RolesAllowed({"user"})
+    public void updateAccountInfo(String accountInfo) {
+        UserDTO user = GSON.fromJson(accountInfo, UserDTO.class);
+        facade.updateUserProfile(user);
     }
 
     @GET
@@ -109,6 +110,15 @@ public class UserResource {
         return "{\"msg\": \"Hello to (admin) Developer: " + thisuser + "\"}";
     }
 
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("profilepicture")
+    public void postProfilePic(InputStream uploadedInputStream /*FormDataContentDisposition fileDetail*/) {
+       // MultiMediaFacade mmf = new MultiMediaFacade();
+       // mmf.makeUpload(uploadedInputStream, fileDetail);
+        // https://javatutorial.net/java-file-upload-rest-service
+        // https://stackoverflow.com/questions/48493459/upload-file-using-react-frontend-app-and-spring-java-backend-app
+    }
 
     @GET
     @Path("populate")
@@ -119,5 +129,4 @@ public class UserResource {
         s.populate();
         return "Success";
     }
-
 }

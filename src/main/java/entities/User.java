@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.enterprise.inject.Default;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -44,7 +45,13 @@ public class User implements Serializable {
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "profile_text")
-    private String profileText;
+    private String profileText = "";
+
+    @Basic(optional = false)
+    @Default
+    @NotNull
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 
 
     @JoinTable(name = "user_roles", joinColumns = {
@@ -78,9 +85,10 @@ public class User implements Serializable {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public User(String username, String password, String recoveryquestion, String answer) {
+    public User(String username, String password, String profileText, String recoveryquestion, String answer) {
         this.username = username;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+        this.profileText = profileText;
         this.recoveryquestion = BCrypt.hashpw(recoveryquestion, BCrypt.gensalt());
         this.answer = BCrypt.hashpw(answer, BCrypt.gensalt());
     }
@@ -102,6 +110,14 @@ public class User implements Serializable {
     public String getRecoveryquestion() {return recoveryquestion;}
 
     public String getAnswer() {return answer;}
+
+    public String getProfileText() {
+        return profileText;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     @Override
     public String toString() {

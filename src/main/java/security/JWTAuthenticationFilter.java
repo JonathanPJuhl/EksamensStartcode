@@ -45,8 +45,6 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
      }
      try {
        UserPrincipal user = getUserPrincipalFromTokenIfValid(token);
-         System.out.println("USER : "+user.getName());
-       //What if the client had logged out????
        request.setSecurityContext(new JWTSecurityContext(user, request));
      } catch (AuthenticationException | ParseException | JOSEException ex) {
        Logger.getLogger(JWTAuthenticationFilter.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,6 +76,8 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
 
    if (signedJWT.verify(verifier)) {
      if (new Date().getTime() > signedJWT.getJWTClaimsSet().getExpirationTime().getTime()) {
+         //System.out.println(signedJWT.getJWTClaimsSet().getExpirationTime().getTime());
+         //System.out.println(new Date().getTime());
        throw new AuthenticationException("Your Token is no longer valid");
      }
      String roles = signedJWT.getJWTClaimsSet().getClaim("roles").toString();

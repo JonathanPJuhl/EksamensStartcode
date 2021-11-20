@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
+import entities.UserDTO;
 import security.errorhandling.AuthenticationException;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ public class UserFacade {
     }
 
     /**
-     *
      * @param _emf
      * @return the instance of this facade.
      */
@@ -50,29 +50,15 @@ public class UserFacade {
         return endUser;
     }
 
-//    public User getVeryfiedDeveloper(String username, String password) throws AuthenticationException {
-//        EntityManager em = emf.createEntityManager();
-//        Developer developer;
-//        try {
-//            developer = em.find(Developer.class, username);
-//            if (developer == null || !developer.verifyPassword(password)) {
-//                throw new AuthenticationException("Invalid developer name or password");
-//            }
-//        } finally {
-//            em.close();
-//        }
-//        return developer;
-//    }
-
     public User createUser(User endUser) {
 
         EntityManager em = emf.createEntityManager();
 
-        User userforPersist = new User(endUser.getUsername(), endUser.getPassword(), endUser.getRecoveryquestion(), endUser.getAnswer());
+        User userforPersist = new User(endUser.getUsername(), endUser.getPassword(), "", endUser.getRecoveryquestion(), endUser.getAnswer());
 
         em.getTransaction().begin();
 
-        Role userRole = new Role("developer");
+        Role userRole = new Role("user");
 
         userforPersist.addRole(userRole);
 
@@ -81,35 +67,18 @@ public class UserFacade {
         em.getTransaction().commit();
         return userforPersist;
     }
-//    public Developer createDeveloper(Developer developer) {
-//
-//        EntityManager em = emf.createEntityManager();
-//
-//        Developer userforPersist = new Developer(developer.getEmail(), developer.getPassword());
-//
-//        em.getTransaction().begin();
-//
-//        Role userRole = new Role("developer");
-//
-//        userforPersist.addRole(userRole);
-//
-//        em.persist(userforPersist);
-//
-//        em.getTransaction().commit();
-//        return userforPersist;
-//    }
 
-    public User findUserByUsername(String username){
+    public User findUserByUsername(String username) {
         EntityManager em = emf.createEntityManager();
         User user;
         try {
-        em.getTransaction().begin();
-        TypedQuery<User> foundUser = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
-        foundUser.setParameter("username", username);
-        em.getTransaction().commit();
-        user = foundUser.getSingleResult();}
-        finally{
-        em.close();
+            em.getTransaction().begin();
+            TypedQuery<User> foundUser = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
+            foundUser.setParameter("username", username);
+            em.getTransaction().commit();
+            user = foundUser.getSingleResult();
+        } finally {
+            em.close();
         }
         return user;
     }
@@ -134,5 +103,17 @@ public class UserFacade {
         allUsers.addAll(foundUsers);
         return allUsers;
     }
-}
 
+    public void updateUserProfile(UserDTO user) {
+        EntityManager em = emf.createEntityManager();
+
+        em.getTransaction().begin();
+        TypedQuery<User> foundUser = em.createQuery("UPDATE User u SET u.profileText = :profileText WHERE u.username = :email", User.class);
+        foundUser.setParameter("profileText", user.getProfileText());
+        foundUser.setParameter("email", user.getEmail());
+        foundUser.executeUpdate();
+        em.getTransaction().commit();
+        em.close();
+    }
+
+}
