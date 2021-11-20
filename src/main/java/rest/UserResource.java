@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import entities.User;
 import entities.ResetPasswordDTO;
 import entities.UserDTO;
-// import facades.MultiMediaFacade;
+import facades.MultiMediaFacade;
 import facades.UserFacade;
 import utils.EMF_Creator;
 import utils.MailSystem;
@@ -16,6 +16,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.*;
+
+
 
 @Path("user")
 public class UserResource {
@@ -109,22 +111,33 @@ public class UserResource {
         return "{\"msg\": \"Hello to (admin) Developer: " + thisuser + "\"}";
     }
 
-  @POST
-  @Path("/uploadfile")
-  public void post(File file) throws FileNotFoundException {
-      Reader reader = new Reader(new FileInputStream(file)) {
-          @Override
-          public int read(char[] cbuf, int off, int len) throws IOException {
-              return 0;
-          }
+    @POST
+    @Path("/uploadfile")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @RolesAllowed("user")
+    public void upload(InputStream file) throws IOException {
+        // Read file contents from the InputStream and do whatever you need
+        String thisuser = securityContext.getUserPrincipal().getName();
+        MultiMediaFacade mff = new MultiMediaFacade();
+        mff.saveFile(file, thisuser + ".JPG");
+    }
 
-          @Override
-          public void close() throws IOException {
+    @GET
+    @Path("/profilePicture")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @RolesAllowed("user")
+    public Response profilePic() throws IOException {
+        // Read file contents from the InputStream and do whatever you need
+        String thisuser = securityContext.getUserPrincipal().getName();
+        MultiMediaFacade mff = new MultiMediaFacade();
 
-          }
-      };
-      // ...
-  }
+        File file = mff.findFile(thisuser + ".JPG");
+        return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
+                .build();
+    }
+
+
 
     @GET
     @Path("populate")
