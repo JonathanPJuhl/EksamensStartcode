@@ -13,9 +13,6 @@ import security.errorhandling.AuthenticationException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author lam@cphbusiness.dk
- */
 public class UserFacade {
 
     private static EntityManagerFactory emf;
@@ -38,9 +35,8 @@ public class UserFacade {
 
     public User getVeryfiedUser(String username, String password) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();
-        User endUser;
+        User endUser = findUserByUsername(username);
         try {
-            endUser = em.find(User.class, username);
             if (endUser == null || !endUser.verifyPassword(password)) {
                 throw new AuthenticationException("Invalid username or password");
             }

@@ -10,13 +10,11 @@ import facades.UserFacade;
 import utils.EMF_Creator;
 import utils.MailSystem;
 import utils.SetupTestUsers;
-
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.*;
-
 
 
 @Path("user")
@@ -54,6 +52,7 @@ public class UserResource {
         User endUserForReturn = facade.createUser(endUser);
         return GSON.toJson(endUserForReturn);
     }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -65,6 +64,7 @@ public class UserResource {
         ms.resetPW(reset);
         return "{\"resp\":\"success\"}";
     }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -86,10 +86,11 @@ public class UserResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("account/{username}")
+    @Path("account")
     @RolesAllowed({"user"})
-    public String getAccountInfo(@PathParam("username") String username) {
-        User user = facade.findUserByUsername(username);
+    public String getAccountInfo() {
+        String thisuser = securityContext.getUserPrincipal().getName();
+        User user = facade.findUserByUsername(thisuser);
         return GSON.toJson(new UserDTO(user.getUsername(), user.getProfileText()));
     }
 
@@ -116,7 +117,6 @@ public class UserResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @RolesAllowed("user")
     public void upload(InputStream file) throws IOException {
-        // Read file contents from the InputStream and do whatever you need
         String thisuser = securityContext.getUserPrincipal().getName();
         MultiMediaFacade mff = new MultiMediaFacade();
         mff.saveFile(file, thisuser + ".JPG");
@@ -127,17 +127,13 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @RolesAllowed("user")
     public Response profilePic() throws IOException {
-        // Read file contents from the InputStream and do whatever you need
         String thisuser = securityContext.getUserPrincipal().getName();
         MultiMediaFacade mff = new MultiMediaFacade();
-
         File file = mff.findFile(thisuser + ".JPG");
         return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
+                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
                 .build();
     }
-
-
 
     @GET
     @Path("populate")

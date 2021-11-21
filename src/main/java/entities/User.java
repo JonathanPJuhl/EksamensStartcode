@@ -74,11 +74,9 @@ public class User implements Serializable {
     public User() {
     }
 
-    //TODO Change when password is hashed
     public boolean verifyPassword(String pw) {
         return (BCrypt.checkpw(pw, password));
     }
-
 
     public User(String username, String password) {
         this.username = username;
@@ -105,11 +103,17 @@ public class User implements Serializable {
         roleList.add(userRole);
     }
 
-    public String getUsername() {return username;}
+    public String getUsername() {
+        return username;
+    }
 
-    public String getRecoveryquestion() {return recoveryquestion;}
+    public String getRecoveryquestion() {
+        return recoveryquestion;
+    }
 
-    public String getAnswer() {return answer;}
+    public String getAnswer() {
+        return answer;
+    }
 
     public String getProfileText() {
         return profileText;
