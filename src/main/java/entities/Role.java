@@ -11,24 +11,21 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author Plaul
- */
 @Entity
 @Table(name = "roles")
 @NamedQuery(name = "Role.deleteAllRows", query = "DELETE from Role")
 public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "role_name", length = 20)
     private String roleName;
-    
+
     @ManyToMany(mappedBy = "roleList")
-    private List<Developer> developerList;
+    private List<User> UserList;
 
     public Role() {
     }
@@ -45,11 +42,11 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-    public List<Developer> getUserList() {
-        return developerList;
+    public List<User> getUserList() {
+        return UserList;
     }
 
-    public void setUserList(List<Developer> developerList) {
-        this.developerList = developerList;
-    }   
+    public void setUserList(List<User> developerList) {
+        this.UserList = developerList;
+    }
 }

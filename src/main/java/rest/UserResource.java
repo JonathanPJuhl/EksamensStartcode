@@ -2,21 +2,20 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import entities.Developer;
+import entities.User;
 import entities.ResetPasswordDTO;
-import entities.DeveloperDTO;
+import entities.UserDTO;
+import facades.MultiMediaFacade;
 import facades.UserFacade;
 import utils.EMF_Creator;
 import utils.MailSystem;
 import utils.SetupTestUsers;
-
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
+import java.io.*;
+
 
 @Path("user")
 public class UserResource {
@@ -41,19 +40,19 @@ public class UserResource {
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllDevelopers() {
-        return GSON.toJson(facade.listOfAllDevs());
+        return GSON.toJson(facade.listOfAllUsers());
     }
 
-    //Just to verify if the database is setup
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("create")
     public String createUser(String user) {
-        Developer developerForCreation = GSON.fromJson(user, Developer.class);
-        Developer developerForReturn = facade.createUser(developerForCreation);
-        return GSON.toJson(developerForReturn);
+        User endUser = GSON.fromJson(user, User.class);
+        User endUserForReturn = facade.createUser(endUser);
+        return GSON.toJson(endUserForReturn);
     }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -65,36 +64,45 @@ public class UserResource {
         ms.resetPW(reset);
         return "{\"resp\":\"success\"}";
     }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("newpassword")
     public String createNewPass(String emailAndNewPass) {
-        Developer developer = GSON.fromJson(emailAndNewPass, Developer.class);
-        System.out.println(developer.toString());
-        facade.updatePasswordForUser(developer);
+        User user = GSON.fromJson(emailAndNewPass, User.class);
+        facade.updatePasswordForUser(user);
         return "{\"resp\":\"success\"}";
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user")
-    @RolesAllowed({"developer"})
+    @RolesAllowed({"user"})
     public String getFromUser() {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Welcome " + thisuser + "\"}";
     }
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("account/{username}")
-   // @RolesAllowed({"user"})
-    public String getAccountInfo(@PathParam("username") String username) {
-        Developer developer = facade.findUserByUsername(username);
-        DeveloperDTO userDTO = new DeveloperDTO(developer.getEmail());
-        return GSON.toJson(userDTO);
+    @Path("account")
+    @RolesAllowed({"user"})
+    public String getAccountInfo() {
+        String thisuser = securityContext.getUserPrincipal().getName();
+        User user = facade.findUserByUsername(thisuser);
+        return GSON.toJson(new UserDTO(user.getUsername(), user.getProfileText()));
     }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("account/update")
+    @RolesAllowed({"user"})
+    public void updateAccountInfo(String accountInfo) {
+        UserDTO user = GSON.fromJson(accountInfo, UserDTO.class);
+        facade.updateUserProfile(user);
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("admin")
@@ -104,6 +112,28 @@ public class UserResource {
         return "{\"msg\": \"Hello to (admin) Developer: " + thisuser + "\"}";
     }
 
+    @POST
+    @Path("/uploadfile")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @RolesAllowed("user")
+    public void upload(InputStream file) throws IOException {
+        String thisuser = securityContext.getUserPrincipal().getName();
+        MultiMediaFacade mff = new MultiMediaFacade();
+        mff.saveFile(file, thisuser + ".JPG");
+    }
+
+    @GET
+    @Path("/profilePicture")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @RolesAllowed("user")
+    public Response profilePic() throws IOException {
+        String thisuser = securityContext.getUserPrincipal().getName();
+        MultiMediaFacade mff = new MultiMediaFacade();
+        File file = mff.findFile(thisuser + ".JPG");
+        return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+                .build();
+    }
 
     @GET
     @Path("populate")
@@ -114,5 +144,4 @@ public class UserResource {
         s.populate();
         return "Success";
     }
-
 }

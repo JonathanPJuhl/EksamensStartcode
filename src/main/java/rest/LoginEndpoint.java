@@ -11,13 +11,16 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import entities.User;
 import facades.UserFacade;
+
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import entities.Developer;
+
 import errorhandling.API_Exception;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,17 +31,19 @@ import javax.ws.rs.core.Response;
 import security.SharedSecret;
 import security.errorhandling.AuthenticationException;
 import errorhandling.GenericExceptionMapper;
+
 import javax.persistence.EntityManagerFactory;
 
 import utils.EMF_Creator;
 
 @Path("login")
-public class  LoginEndpoint {
+public class LoginEndpoint {
 
-    public static final int TOKEN_EXPIRE_TIME = 100 * 60 * 30; //30 min
+    public static final int TOKEN_EXPIRE_TIME = 100 * 60 * 60; //60 min
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final UserFacade USER_FACADE = UserFacade.getUserFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,18 +55,16 @@ public class  LoginEndpoint {
             username = json.get("username").getAsString();
             password = json.get("password").getAsString();
         } catch (Exception e) {
-           throw new API_Exception("Malformed JSON Suplied",400,e);
+            throw new API_Exception("Malformed JSON Suplied", 400, e);
         }
 
         try {
-            Developer developer = USER_FACADE.getVeryfiedUser(username, password);
-            String token = createToken(username, developer.getRolesAsStrings());
+            User user = USER_FACADE.getVeryfiedUser(username, password);
+            String token = createToken(username, user.getRolesAsStrings());
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("username", username);
             responseJson.addProperty("token", token);
-            System.out.println(developer.toString());
             return Response.ok(new Gson().toJson(responseJson)).build();
-
         } catch (JOSEException | AuthenticationException ex) {
             if (ex instanceof AuthenticationException) {
                 throw (AuthenticationException) ex;
@@ -79,7 +82,7 @@ public class  LoginEndpoint {
             res.append(",");
         }
         String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
-        String issuer = "semesterstartcode-dat3";
+        String issuer = "JJStocks";
 
         JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
         Date date = new Date();

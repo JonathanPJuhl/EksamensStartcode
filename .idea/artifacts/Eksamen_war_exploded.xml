@@ -6,6 +6,7 @@
         <exploded>true</exploded>
         <module>Eksamen</module>
         <packaging>war</packaging>
+        <unpackNestedArchives>false</unpackNestedArchives>
       </options>
     </properties>
     <root id="root">
@@ -57,6 +58,8 @@
           <element id="library" level="project" name="Maven: com.nimbusds:nimbus-jose-jwt:9.0.1" />
           <element id="library" level="project" name="Maven: com.github.stephenc.jcip:jcip-annotations:1.0-1" />
           <element id="library" level="project" name="Maven: org.mindrot:jbcrypt:0.4" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.media:jersey-media-multipart:2.32" />
+          <element id="library" level="project" name="Maven: org.jvnet.mimepull:mimepull:1.9.13" />
         </element>
       </element>
       <element id="directory" name="META-INF">

@@ -16,7 +16,7 @@
         <!-- TODO: Add the URL to your own tomcat server. Used to deploy your WAR-file -->
         <!-- IMPORTANT-1: If your server uses https (via NGINX) use your DOMAIN NAME and https below: -->
         <!-- IMPORTANT-2: Observe we are NOT using /manager/html but /manager/text for script uploads --> 
-        <remote.server>https://ipwithme.com/tomcat/manager/text</remote.server>
+        <remote.server>https://ipwithme.dk/manager/text</remote.server>
         
     </properties>
     
@@ -44,13 +44,11 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.17</version>
         </dependency>
-      
         <dependency>
             <groupId>org.glassfish.jersey.bundles</groupId>
             <artifactId>jaxrs-ri</artifactId>
             <version>2.32</version>
         </dependency>
-               
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
@@ -117,6 +115,11 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>2.32</version>
         </dependency>
 
     </dependencies>
