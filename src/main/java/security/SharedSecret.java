@@ -7,7 +7,6 @@ import java.security.SecureRandom;
  * For production (and if a load-balancer is used) come up with a persistent key strategy */
 public class SharedSecret {
     private static byte[] secret;
-
     public static byte[] getSharedKey() {
       /*
         System.out.println("******************* IMPORTANT ******************'");
