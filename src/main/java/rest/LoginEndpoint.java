@@ -50,16 +50,17 @@ public class LoginEndpoint {
     public Response login(String jsonString) throws AuthenticationException, API_Exception {
         String username;
         String password;
+        String ip;
         try {
             JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
             username = json.get("username").getAsString();
             password = json.get("password").getAsString();
+            ip = json.get("ip").getAsString();
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Suplied", 400, e);
         }
-
         try {
-            User user = USER_FACADE.getVeryfiedUser(username, password);
+            User user = USER_FACADE.getVeryfiedUser(username, password, ip);
             String token = createToken(username, user.getRolesAsStrings());
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("username", username);
@@ -67,7 +68,8 @@ public class LoginEndpoint {
             return Response.ok(new Gson().toJson(responseJson)).build();
         } catch (JOSEException | AuthenticationException ex) {
             if (ex instanceof AuthenticationException) {
-                throw (AuthenticationException) ex;
+                //throw (AuthenticationException) ex;
+                return Response.status(401).build();
             }
             Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,12 +101,4 @@ public class LoginEndpoint {
         return signedJWT.serialize();
 
     }
-/*    @POST
-    @Path("/validatetoken")
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public String validateJWT(String token){
-
-
-    }*/
 }

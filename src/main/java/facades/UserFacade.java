@@ -1,10 +1,12 @@
 package facades;
 
+import entities.LoginAttempts;
 import entities.User;
 import entities.Role;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import entities.UserDTO;
@@ -17,6 +19,8 @@ public class UserFacade {
 
     private static EntityManagerFactory emf;
     private static UserFacade instance;
+
+
 
     private UserFacade() {
     }
@@ -33,11 +37,26 @@ public class UserFacade {
         return instance;
     }
 
-    public User getVeryfiedUser(String username, String password) throws AuthenticationException {
+    public User getVeryfiedUser(String username, String password, String ip) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();
+        MaliciousIntentFacade mIF = MaliciousIntentFacade.getMaliciousIntentFacade(emf);
         User endUser = findUserByUsername(username);
+        LoginAttempts lA = new LoginAttempts(ip, username, "login");
+
+        if(mIF.isBanned(lA)) {
+            throw new AuthenticationException("Your Ip is banned, try again in 10 hours");
+        }
+        if(mIF.getLoggedAttempts(lA) >= 3) {
+            mIF.createBan(lA);
+            throw new AuthenticationException("Too many login attempts, try again in 10 hours");
+        }
         try {
+            if(endUser != null && !endUser.verifyPassword(password)) {
+                mIF.logAttempt(lA);
+                throw new AuthenticationException("Invalid username or password");
+             }
             if (endUser == null || !endUser.verifyPassword(password)) {
+                mIF.logAttempt(lA);
                 throw new AuthenticationException("Invalid username or password");
             }
         } finally {
@@ -72,7 +91,12 @@ public class UserFacade {
             TypedQuery<User> foundUser = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
             foundUser.setParameter("username", username);
             em.getTransaction().commit();
-            user = foundUser.getSingleResult();
+            try {
+                user = foundUser.getSingleResult();
+            } catch(NoResultException e) {
+                return null;
+            }
+
         } finally {
             em.close();
         }
@@ -111,5 +135,4 @@ public class UserFacade {
         em.getTransaction().commit();
         em.close();
     }
-
 }

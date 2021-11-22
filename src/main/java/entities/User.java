@@ -48,6 +48,13 @@ public class User implements Serializable {
     private String profileText = "";
 
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "two_factor_code")
+    private String twoFactorCode = "";
+
+
+    @Basic(optional = false)
     @Default
     @NotNull
     @Column(name = "is_deleted")
@@ -121,6 +128,14 @@ public class User implements Serializable {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public void setTwoFactorCode(String twoFactorCode) {
+        this.twoFactorCode = twoFactorCode;
+    }
+
+    public String getTwoFactorCode() {
+        return twoFactorCode;
     }
 
     @Override
