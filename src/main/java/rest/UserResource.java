@@ -2,11 +2,14 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import entities.User;
 import entities.ResetPasswordDTO;
 import entities.UserDTO;
 import facades.MultiMediaFacade;
 import facades.UserFacade;
+import security.Logging;
 import utils.EMF_Creator;
 import utils.MailSystem;
 import utils.SetupTestUsers;
@@ -22,6 +25,16 @@ public class UserResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static UserFacade facade = UserFacade.getUserFacade(EMF);
+    private static Logging log;
+
+    static {
+        try {
+            log = Logging.getLog();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Context
@@ -32,16 +45,17 @@ public class UserResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getInfoForAll() {
+    public String getInfoForAll() throws IOException {
+        log.warningLog("OH NO");
         return "{\"msg\":\"Hello anonymous\"}";
     }
 
-    @GET
+    /*@GET
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllDevelopers() {
         return GSON.toJson(facade.listOfAllUsers());
-    }
+    }*/
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -143,5 +157,22 @@ public class UserResource {
         SetupTestUsers s = new SetupTestUsers();
         s.populate();
         return "Success";
+    }
+
+    @POST
+    @Path("/unlock")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response unlockAcc(String mailAndKey) {
+        JsonObject json = JsonParser.parseString(mailAndKey).getAsJsonObject();
+        String email = json.get("email").getAsString();
+        String key = json.get("passwordForUnlocking").getAsString();
+        boolean unlockUser = facade.unlockUser(email, key);
+        System.out.println(unlockUser);
+        if(unlockUser) {
+            return Response.ok("\"resp\": \"Account unlocked\"").build();
+        } else {
+            return Response.status(401, "\"resp\": \"Key doesn't match\"").build();
+        }
     }
 }

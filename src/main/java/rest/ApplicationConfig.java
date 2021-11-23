@@ -1,6 +1,5 @@
 package rest;
 
-
 import java.util.Set;
 import javax.ws.rs.core.Application;
 
@@ -14,12 +13,6 @@ public class ApplicationConfig extends Application {
         return resources;
     }
 
-    /**
-     * Do not modify addRestResourceClasses() method.
-     * It is automatically populated with
-     * all resources defined in the project.
-     * If required, comment out calling this method in getClasses().
-     */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(cors.CorsFilter.class);
         resources.add(errorhandling.API_ExceptionMapper.class);
@@ -31,6 +24,8 @@ public class ApplicationConfig extends Application {
         resources.add(security.errorhandling.AuthenticationExceptionMapper.class);
         resources.add(security.errorhandling.NotAuthorizedExceptionMapper.class);
         resources.add(UserResource.class);
+        resources.add(RegisterMaliciousIntent.class);
+        resources.add(AdminResource.class);
     }
 
 }
