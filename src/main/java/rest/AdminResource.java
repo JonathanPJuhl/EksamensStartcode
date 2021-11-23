@@ -51,7 +51,7 @@ public class AdminResource {
     @Path("allUsers")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"admin"})
-    public String getAllDevelopers() {
+    public String getAllUsers() {
         return GSON.toJson(facade.listOfAllUsers());
     }
 
@@ -75,7 +75,7 @@ public class AdminResource {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("user/deactivate")
+    @Path("user/activate")
     @RolesAllowed({"admin"})
     public Response reActivateUser(String user) {
         String username;

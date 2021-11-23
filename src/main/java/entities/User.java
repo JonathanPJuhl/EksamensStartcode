@@ -83,6 +83,11 @@ public class User implements Serializable {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
+    public User(String username, boolean isDeleted) {
+        this.username = username;
+        this.isDeleted = isDeleted;
+    }
+
     public User(String username, String password, String profileText) {
         this.username = username;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());

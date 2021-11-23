@@ -1,5 +1,6 @@
 package facades;
 
+import entities.ActiveUsersDTO;
 import entities.User;
 
 import javax.persistence.EntityManager;
@@ -51,14 +52,18 @@ public class AdminFacade {
         }
     }
 
-    public List<String> listOfAllUsers() {
+    public List<ActiveUsersDTO> listOfAllUsers() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<String> findUsers = em.createQuery("SELECT u.username FROM User u JOIN u.roleList r WHERE r.roleName= :user AND u.isDeleted = false", String.class);
+        TypedQuery<User> findUsers = em.createQuery("SELECT u FROM User u JOIN u.roleList r WHERE r.roleName= :user", User.class);
         findUsers.setParameter("user", "user");
-        List<String> foundUsers = findUsers.getResultList();
-        List<String> allUsers = new ArrayList<>();
-        allUsers.addAll(foundUsers);
-        return allUsers;
+        List<User> foundUsers = findUsers.getResultList();
+
+        List<ActiveUsersDTO> aUD = new ArrayList<>();
+        for (User u: foundUsers
+             ) {
+             aUD.add(new ActiveUsersDTO(u.getUsername(), u.isDeleted()));
+        }
+        return aUD;
     }
 
 }
