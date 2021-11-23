@@ -3,18 +3,14 @@ package facades;
 import entities.LoginAttempts;
 import entities.User;
 import entities.Role;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-
 import entities.UserDTO;
-import security.RandomString;
 import security.errorhandling.AuthenticationException;
+import utils.MailSystem;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class UserFacade {
@@ -115,15 +111,7 @@ public class UserFacade {
 
     }
 
-    public List<String> listOfAllUsers() {
-        EntityManager em = emf.createEntityManager();
-        TypedQuery<String> findUsers = em.createQuery("SELECT u.username FROM User u JOIN u.roleList r WHERE r.roleName= :user", String.class);
-        findUsers.setParameter("user", "user");
-        List<String> foundUsers = findUsers.getResultList();
-        List<String> allUsers = new ArrayList<>();
-        allUsers.addAll(foundUsers);
-        return allUsers;
-    }
+
 
     public void updateUserProfile(UserDTO user) {
         EntityManager em = emf.createEntityManager();
@@ -141,12 +129,7 @@ public class UserFacade {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         User user = em.find(User.class, username);
-        byte[] array = new byte[20]; // length is bounded by 7
-        new Random().nextBytes(array);
-        // charsets not working
-        // fix https://stackoverflow.com/questions/41107/how-to-generate-a-random-alpha-numeric-string
         String uuid = UUID.randomUUID().toString();
-
         String generatedString = uuid;
         String generatedWithoutUnderscore = generatedString.replaceAll("_", "");
         generatedWithoutUnderscore = generatedString.replaceAll("-  ", "");
@@ -172,5 +155,49 @@ public class UserFacade {
         em.close();
 
         return true;
+    }
+
+    public void create2FA(String username, String password, String ip) throws AuthenticationException {
+        MailSystem ms = new MailSystem();
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        User user = getVeryfiedUser(username, password, ip);
+        String uuid = UUID.randomUUID().toString();
+        long ttl = new Date().getTime()+60000;
+        user.setTwoFactorCode(uuid + "_" + ttl);
+        em.merge(user);
+        System.out.println(user);
+        em.getTransaction().commit();
+        em.close();
+        ms.twoFactor(user.getUsername(), user.getTwoFactorCode());
+    }
+
+    public boolean validate2FA(String username, String twoFactor) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        User user = em.find(User.class, username);
+
+        String[] codeAndTtl = twoFactor.split("_");
+        long now = new Date().getTime();
+        if (Long.parseLong(codeAndTtl[1]) <= now) {
+            System.out.println("UDLØBET");
+            user.setTwoFactorCode("");
+            em.merge(user);
+            em.getTransaction().commit();
+            em.close();
+            return false;
+        }
+        System.out.println("USER CODE:" + user.getTwoFactorCode());
+        System.out.println("Supplied:" + twoFactor);
+        if(user.getTwoFactorCode().equals(twoFactor)) {
+            System.out.println("SUCCESS");
+            user.setTwoFactorCode("");
+            em.merge(user);
+            em.getTransaction().commit();
+            em.close();
+            return true;
+        }
+        return false;
     }
 }

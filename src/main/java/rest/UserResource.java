@@ -50,12 +50,12 @@ public class UserResource {
         return "{\"msg\":\"Hello anonymous\"}";
     }
 
-    @GET
+    /*@GET
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllDevelopers() {
         return GSON.toJson(facade.listOfAllUsers());
-    }
+    }*/
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

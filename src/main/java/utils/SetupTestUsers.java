@@ -11,14 +11,14 @@ public class SetupTestUsers {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
-        User endUser = new User("developer@DEV.DK", "usertest");
+        User endUser = new User("jonathan.p.juhl@gmail.com", "usertest");
 
         em.getTransaction().begin();
 
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");
 
-        endUser.addRole(userRole);
+        endUser.addRole(adminRole);
 
         em.persist(userRole);
         em.persist(adminRole);
@@ -35,14 +35,14 @@ public class SetupTestUsers {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
-        User endUser = new User("developer@DEV.DK", "usertest");
+        User endUser = new User("jonathan.p.juhl@gmail.com", "usertest");
 
         em.getTransaction().begin();
 
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");
 
-        endUser.addRole(userRole);
+        endUser.addRole(adminRole);
 
         em.persist(userRole);
         em.persist(adminRole);

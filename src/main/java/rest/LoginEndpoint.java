@@ -45,6 +45,45 @@ public class LoginEndpoint {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @POST
+    @Path("2fa")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String create2FACode(String jsonString) throws API_Exception {
+        String username;
+        String password;
+        String ip;
+        try {
+            JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+            username = json.get("username").getAsString();
+            password = json.get("password").getAsString();
+            ip = json.get("ip").getAsString();
+            USER_FACADE.create2FA(username, password, ip);
+            System.out.println(username+ " " + password + " " + ip);
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Suplied", 400, e);
+        }
+        return "{\"resp\" : \"success\"}";
+    }
+
+    @POST
+    @Path("/2fa/validate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response validate2FACode(String jsonString) {
+        String username;
+        String twoFactor;
+        boolean isSame;
+        JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+        username = json.get("username").getAsString();
+        twoFactor = json.get("twoFactor").getAsString();
+        isSame = USER_FACADE.validate2FA(username, twoFactor);
+        if(!isSame) {
+            return Response.status(401,(new Gson().toJson(isSame))).build();
+        }
+        return Response.ok().build();
+    }
+
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(String jsonString) throws AuthenticationException, API_Exception {
@@ -68,8 +107,7 @@ public class LoginEndpoint {
             return Response.ok(new Gson().toJson(responseJson)).build();
         } catch (JOSEException | AuthenticationException ex) {
             if (ex instanceof AuthenticationException) {
-                //throw (AuthenticationException) ex;
-                return Response.status(401).build();
+                return Response.status(401, new Gson().toJson(((AuthenticationException) ex).getMessage())).build();
             }
             Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,6 +137,5 @@ public class LoginEndpoint {
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
         signedJWT.sign(signer);
         return signedJWT.serialize();
-
     }
 }
