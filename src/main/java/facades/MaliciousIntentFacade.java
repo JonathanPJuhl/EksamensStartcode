@@ -15,7 +15,7 @@ public class MaliciousIntentFacade {
     private static EntityManagerFactory emf;
     private static MaliciousIntentFacade instance;
 
-    
+
     private MaliciousIntentFacade() {
     }
 
@@ -36,7 +36,7 @@ public class MaliciousIntentFacade {
         EntityManager em = emf.createEntityManager();
         Date date = new Date();
         LoginAttempts attempt = new LoginAttempts(att.getIp(), att.getTargetAccount(), att.getIntent());
-        attempt.setTimestamp(""+date.getTime());
+        attempt.setTimestamp("" + date.getTime());
         em.getTransaction().begin();
         em.persist(attempt);
         em.getTransaction().commit();
@@ -101,6 +101,7 @@ public class MaliciousIntentFacade {
         String user = "";
         if(facade.findUserByUsername(att.getTargetAccount()) != null) {
             user = att.getTargetAccount();
+            facade.setUserRecoveryKey(user, att.getIp());
             ms.sendWarningForUser(user, att.getIp());
         }
         em.getTransaction().begin();
@@ -111,8 +112,24 @@ public class MaliciousIntentFacade {
             ban.setBannedFromAccount(user);
             em.merge(ban);
         } else {
+            ban.setBannedFromAccount(user);
             em.persist(ban);
         }
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public void liftBan (String mail, String ip) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        TypedQuery<BannedIPS> deleteMatch = em.createQuery("DELETE FROM BannedIPS b WHERE b.iP = :ip AND b.bannedFromAccount = :mail", BannedIPS.class);
+        deleteMatch.setParameter("ip", ip);
+        deleteMatch.setParameter("mail", mail);
+        TypedQuery<LoginAttempts> deleteMatchingLoginAttempts = em.createQuery("DELETE FROM LoginAttempts l WHERE l.ip = :ip AND l.targetAccount = :mail", LoginAttempts.class);
+        deleteMatchingLoginAttempts.setParameter("ip", ip);
+        deleteMatchingLoginAttempts.setParameter("mail", mail);
+        deleteMatch.executeUpdate();
+        deleteMatchingLoginAttempts.executeUpdate();
         em.getTransaction().commit();
         em.close();
     }

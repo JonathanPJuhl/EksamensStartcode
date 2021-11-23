@@ -10,16 +10,17 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import entities.UserDTO;
+import security.RandomString;
 import security.errorhandling.AuthenticationException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class UserFacade {
 
     private static EntityManagerFactory emf;
     private static UserFacade instance;
-
 
 
     private UserFacade() {
@@ -69,7 +70,7 @@ public class UserFacade {
 
         EntityManager em = emf.createEntityManager();
 
-        User userforPersist = new User(endUser.getUsername(), endUser.getPassword(), "", endUser.getRecoveryquestion(), endUser.getAnswer());
+        User userforPersist = new User(endUser.getUsername(), endUser.getPassword(), "");
 
         em.getTransaction().begin();
 
@@ -134,5 +135,42 @@ public class UserFacade {
         foundUser.executeUpdate();
         em.getTransaction().commit();
         em.close();
+    }
+
+    public void setUserRecoveryKey(String username, String ip) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        User user = em.find(User.class, username);
+        byte[] array = new byte[20]; // length is bounded by 7
+        new Random().nextBytes(array);
+        // charsets not working
+        // fix https://stackoverflow.com/questions/41107/how-to-generate-a-random-alpha-numeric-string
+        String uuid = UUID.randomUUID().toString();
+
+        String generatedString = uuid;
+        String generatedWithoutUnderscore = generatedString.replaceAll("_", "");
+        generatedWithoutUnderscore = generatedString.replaceAll("-  ", "");
+        String key = ip + "_" + generatedWithoutUnderscore;
+        user.setKeyForUnlocking(key);
+        em.merge(user);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public boolean unlockUser(String email, String key) {
+        MaliciousIntentFacade mIF = MaliciousIntentFacade.getMaliciousIntentFacade(emf);
+        User user = findUserByUsername(email);
+        if(!user.getKeyForUnlocking().equals(key)) {
+            return false;
+        }
+        String[] ipAndKey = key.split("_");
+        mIF.liftBan(email, ipAndKey[0]);
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        user.setKeyForUnlocking("");
+        em.getTransaction().commit();
+        em.close();
+
+        return true;
     }
 }

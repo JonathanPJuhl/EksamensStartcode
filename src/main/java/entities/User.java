@@ -32,18 +32,6 @@ public class User implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "recovery_question")
-    private String recoveryquestion;
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "recovery_answer")
-    private String answer;
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
     @Column(name = "profile_text")
     private String profileText = "";
 
@@ -53,6 +41,11 @@ public class User implements Serializable {
     @Column(name = "two_factor_code")
     private String twoFactorCode = "";
 
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "unlock_key")
+    private String keyForUnlocking = "";
 
     @Basic(optional = false)
     @Default
@@ -90,12 +83,10 @@ public class User implements Serializable {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public User(String username, String password, String profileText, String recoveryquestion, String answer) {
+    public User(String username, String password, String profileText) {
         this.username = username;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
         this.profileText = profileText;
-        this.recoveryquestion = BCrypt.hashpw(recoveryquestion, BCrypt.gensalt());
-        this.answer = BCrypt.hashpw(answer, BCrypt.gensalt());
     }
 
     public String getPassword() {
@@ -114,20 +105,16 @@ public class User implements Serializable {
         return username;
     }
 
-    public String getRecoveryquestion() {
-        return recoveryquestion;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
     public String getProfileText() {
         return profileText;
     }
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
     public void setTwoFactorCode(String twoFactorCode) {
@@ -137,6 +124,16 @@ public class User implements Serializable {
     public String getTwoFactorCode() {
         return twoFactorCode;
     }
+
+    public String getKeyForUnlocking() {
+        return keyForUnlocking;
+    }
+
+    public void setKeyForUnlocking(String keyForUnlocking) {
+        this.keyForUnlocking = keyForUnlocking;
+    }
+
+
 
     @Override
     public String toString() {

@@ -2,6 +2,8 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import entities.User;
 import entities.ResetPasswordDTO;
 import entities.UserDTO;
@@ -155,5 +157,22 @@ public class UserResource {
         SetupTestUsers s = new SetupTestUsers();
         s.populate();
         return "Success";
+    }
+
+    @POST
+    @Path("/unlock")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response unlockAcc(String mailAndKey) {
+        JsonObject json = JsonParser.parseString(mailAndKey).getAsJsonObject();
+        String email = json.get("email").getAsString();
+        String key = json.get("passwordForUnlocking").getAsString();
+        boolean unlockUser = facade.unlockUser(email, key);
+        System.out.println(unlockUser);
+        if(unlockUser) {
+            return Response.ok("\"resp\": \"Account unlocked\"").build();
+        } else {
+            return Response.status(401, "\"resp\": \"Key doesn't match\"").build();
+        }
     }
 }
