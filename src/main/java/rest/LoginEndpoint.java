@@ -85,12 +85,12 @@ public class LoginEndpoint {
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Suplied", 400, e);
         }
-        if(twoFactor == "") {
-            return Response.status(401,(new Gson().toJson("Please validate yourself"))).build();
+        if (twoFactor == "") {
+            return Response.status(401, (new Gson().toJson("Please validate yourself"))).build();
         }
         isSame = USER_FACADE.validate2FA(username, twoFactor, ip);
-        if(!isSame) {
-            return Response.status(401,(new Gson().toJson(isSame))).build();
+        if (!isSame) {
+            return Response.status(401, (new Gson().toJson(isSame))).build();
         }
         try {
             User user = USER_FACADE.getVeryfiedUser(username, password, ip);
