@@ -8,6 +8,9 @@ public class UserDTO {
         this.email = email;
         this.profileText = profileText;
     }
+    public UserDTO(String email) {
+        this.email = email;
+    }
 
     public String getEmail() {
         return email;

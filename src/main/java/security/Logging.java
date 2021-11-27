@@ -20,8 +20,6 @@ public class Logging {
         return instance;
     }
     public void severeLog (String message) throws IOException {
-
-
         logger.addHandler(handler);
         logger.severe(message);
     }

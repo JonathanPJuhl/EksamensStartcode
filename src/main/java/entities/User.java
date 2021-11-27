@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.enterprise.inject.Default;
 import javax.persistence.*;
@@ -20,7 +21,7 @@ public class User implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "user_name", length = 25)
+    @Column(name = "user_name", length = 60)
     private String username;
 
     @Basic(optional = false)
@@ -53,6 +54,29 @@ public class User implements Serializable {
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
+    @Basic(optional = false)
+    @Default
+    @NotNull
+    @Column(name = "is_verified")
+    private boolean isVerified = false;
+
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "verification_key")
+    private String verificationKey = "";
+
+    @Basic(optional = false)
+    @Default
+    @NotNull
+    @Column(name = "ttl")
+    private Date ttlBeforeDeletion;
+
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "reset_pass_key")
+    private String resetPassKey = "";
 
     @JoinTable(name = "user_roles", joinColumns = {
             @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
@@ -138,7 +162,37 @@ public class User implements Serializable {
         this.keyForUnlocking = keyForUnlocking;
     }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
 
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public Date getTtlBeforeDeletion() {
+        return ttlBeforeDeletion;
+    }
+
+    public void setTtlBeforeDeletion(Date ttlBeforeDeletion) {
+        this.ttlBeforeDeletion = ttlBeforeDeletion;
+    }
+
+    public String getVerificationKey() {
+        return verificationKey;
+    }
+
+    public void setVerificationKey(String verificationKey) {
+        this.verificationKey = verificationKey;
+    }
+
+    public String getResetPassKey() {
+        return resetPassKey;
+    }
+
+    public void setResetPassKey(String resetPassKey) {
+        this.resetPassKey = resetPassKey;
+    }
 
     @Override
     public String toString() {

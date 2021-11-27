@@ -1,6 +1,5 @@
 package utils;
 
-
 import entities.*;
 
 import javax.persistence.EntityManager;

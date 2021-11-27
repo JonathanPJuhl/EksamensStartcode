@@ -50,13 +50,6 @@ public class UserResource {
         return "{\"msg\":\"Hello anonymous\"}";
     }
 
-    /*@GET
-    @Path("all")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getAllDevelopers() {
-        return GSON.toJson(facade.listOfAllUsers());
-    }*/
-
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -71,22 +64,31 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("resetpass")
-    public String resetPW(String emailAndAnswer) {
-        ResetPasswordDTO reset = GSON.fromJson(emailAndAnswer, ResetPasswordDTO.class);
-        MailSystem ms = new MailSystem();
-        System.out.println(reset.toString());
-        ms.resetPW(reset);
-        return "{\"resp\":\"success\"}";
+    public Response resetPW(String email) {
+        JsonObject json = JsonParser.parseString(email).getAsJsonObject();
+        String mail = json.get("email").getAsString();
+        System.out.println(mail);
+        boolean userExists = facade.sendPassResetForUser(mail);
+        if (userExists) {
+            return Response.ok().build();
+        }
+        return Response.status(404, "user not found").build();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("newpassword")
-    public String createNewPass(String emailAndNewPass) {
-        User user = GSON.fromJson(emailAndNewPass, User.class);
-        facade.updatePasswordForUser(user);
-        return "{\"resp\":\"success\"}";
+    public Response createNewPass(String emailNewPassAndKey) {
+        JsonObject json = JsonParser.parseString(emailNewPassAndKey).getAsJsonObject();
+        String email = json.get("email").getAsString();
+        String newPass = json.get("password").getAsString();
+        String key = json.get("key").getAsString();
+        boolean isMatch = facade.updatePasswordForUser(email, newPass, key);
+        if(isMatch) {
+            return Response.ok().build();
+        }
+        return Response.status(401, "Username or key doesn't match").build();
     }
 
     @GET
@@ -168,9 +170,24 @@ public class UserResource {
         String email = json.get("email").getAsString();
         String key = json.get("passwordForUnlocking").getAsString();
         boolean unlockUser = facade.unlockUser(email, key);
-        System.out.println(unlockUser);
         if(unlockUser) {
             return Response.ok("\"resp\": \"Account unlocked\"").build();
+        } else {
+            return Response.status(401, "\"resp\": \"Key doesn't match\"").build();
+        }
+    }
+
+    @POST
+    @Path("/verify/account")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response verifyAcc(String mailAndKey) {
+        JsonObject json = JsonParser.parseString(mailAndKey).getAsJsonObject();
+        String email = json.get("email").getAsString();
+        String key = json.get("passwordForVerifying").getAsString();
+        boolean verifyUser = facade.verifyUsersMail(email, key);
+        if(verifyUser) {
+            return Response.ok("\"resp\": \"Account verified\"").build();
         } else {
             return Response.status(401, "\"resp\": \"Key doesn't match\"").build();
         }
