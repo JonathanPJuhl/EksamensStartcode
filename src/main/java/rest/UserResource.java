@@ -45,6 +45,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getInfoForAll() throws IOException {
         //log.warningLog("OH NO");
+        System.out.println(new File("").getAbsolutePath());
         return "{\"msg\":\"Hello anonymous\"}";
     }
 
@@ -65,7 +66,6 @@ public class UserResource {
     public Response resetPW(String email) {
         JsonObject json = JsonParser.parseString(email).getAsJsonObject();
         String mail = json.get("email").getAsString();
-        System.out.println(mail);
         boolean userExists = facade.sendPassResetForUser(mail);
         if (userExists) {
             return Response.ok().build();
