@@ -11,9 +11,7 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import entities.LoginAttempts;
 import entities.User;
-import facades.MaliciousIntentFacade;
 import facades.UserFacade;
 
 import java.util.Date;

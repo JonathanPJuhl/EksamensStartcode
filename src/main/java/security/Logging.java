@@ -1,3 +1,4 @@
+/*
 package security;
 
 import java.io.IOException;
@@ -5,6 +6,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 public class Logging {
+
     Logger logger = Logger.getLogger("log");
     boolean append = true;
     FileHandler handler = new FileHandler("/var/www/html/logs.log", append);
@@ -19,6 +21,7 @@ public class Logging {
         }
         return instance;
     }
+
     public void severeLog (String message) throws IOException {
         logger.addHandler(handler);
         logger.severe(message);
@@ -34,3 +37,4 @@ public class Logging {
         logger.info(message);
     }
 }
+*/
