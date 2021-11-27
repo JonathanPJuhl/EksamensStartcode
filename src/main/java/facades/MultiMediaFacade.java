@@ -4,7 +4,7 @@ import java.io.*;
 
 public class MultiMediaFacade {
 
-    private final String UPLOAD_FOLDER = "D:/uploadedFiles/";
+    private final String UPLOAD_FOLDER = "/var/www/html/uploadedFiles/";
 
     public void saveFile(InputStream in, String filename) throws IOException {
         createFolderIfNotExists(UPLOAD_FOLDER);
