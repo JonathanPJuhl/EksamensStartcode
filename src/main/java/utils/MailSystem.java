@@ -1,14 +1,9 @@
 package utils;
 
-import entities.ResetPasswordDTO;
 import entities.User;
-import entities.UserDTO;
 import facades.UserFacade;
 
-import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.Properties;
-import java.util.Random;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -22,14 +17,10 @@ import javax.persistence.EntityManagerFactory;
 public class MailSystem {
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
 
-    public void resetPW(ResetPasswordDTO recipientAndSecurityAnswer) {
+    public void resetPW(String mail, String keyForUser) {
 
-        String recipient = recipientAndSecurityAnswer.getEmail();
-        String answerToSecurityQuestion = recipientAndSecurityAnswer.getAnswerToSecurityQuestion();
-
-        UserFacade userF = UserFacade.getUserFacade(EMF);
-        User user = userF.findUserByUsername(recipient);
-
+        String recipient = mail;
+        String key = keyForUser;
 
         String to = recipient;
 
@@ -64,7 +55,9 @@ public class MailSystem {
             message.setSubject("Reset password");
 
             message.setContent(
-                    "<p>Please click: <p> <a href=\"www.ipwithme.com/sys-frontend/#/resetPW/" + recipient + "\">Here</a><p> to reset your password</p><p>Kind regards, JJStocks</p>",
+                    "<p>Please click: <p> <a href=\"www.ipwithme.com/sys-frontend/#/resetPW/" + recipient + "\">Here</a>" +
+                            "<p> And input: </p> <p>" + key + "</p>" +
+                            "<p> to reset your password</p><p>Kind regards, JJStocks</p>",
                     "text/html");
 
             System.out.println("sending...");
@@ -229,6 +222,57 @@ public class MailSystem {
                             "<p>Password: " + uniqueKey + "</p>"+
                             "<p>Kind regards</p>"+
                             "<p>JJStocks</p>",
+                    "text/html");
+
+            System.out.println("sending...");
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
+    }
+
+    public void verifyUsersEmail(String username, String key) {
+
+        String recipient = username;
+
+        String to = recipient;
+
+        String from = "itsikkerhedseksamen@gmail.com";
+
+        String host = "smtp.gmail.com";
+
+        Properties properties = System.getProperties();
+
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("itsikkerhedseksamen@gmail.com", "Datamatik1");
+            }
+
+        });
+
+        session.setDebug(true);
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+
+            message.setFrom(new InternetAddress(from));
+
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+            message.setSubject("Please verify your email");
+
+            message.setContent(
+                    "<p>Your verification code: <p> " +
+                            "<p>"+ key +"</p>" +
+                            "<p>Please go to <p> " +
+                            " <p> <a href=\"www.ipwithme.dk/sys-frontend/#/verify\">This site</a><p> to verify</p>" ,
                     "text/html");
 
             System.out.println("sending...");

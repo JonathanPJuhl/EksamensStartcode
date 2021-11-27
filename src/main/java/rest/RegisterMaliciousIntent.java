@@ -4,12 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.LoginAttempts;
 import facades.MaliciousIntentFacade;
-import facades.UserFacade;
 import security.Logging;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -35,7 +33,6 @@ public class RegisterMaliciousIntent {
     @Path("injection")
     @Produces(MediaType.APPLICATION_JSON)
     public void registerInjectionAttempt(String info) throws IOException {
-        System.out.println(info);
         log.warningLog(info);
         facade.logAttempt(GSON.fromJson(info, LoginAttempts.class));
     }
@@ -43,7 +40,6 @@ public class RegisterMaliciousIntent {
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
     public void registerLoginAttempt(String info) throws IOException {
-        System.out.println(info);
         log.warningLog(info);
         facade.logAttempt(GSON.fromJson(info, LoginAttempts.class));
     }

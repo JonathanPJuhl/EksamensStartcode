@@ -11,7 +11,9 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import entities.LoginAttempts;
 import entities.User;
+import facades.MaliciousIntentFacade;
 import facades.UserFacade;
 
 import java.util.Date;
@@ -58,30 +60,12 @@ public class LoginEndpoint {
             password = json.get("password").getAsString();
             ip = json.get("ip").getAsString();
             USER_FACADE.create2FA(username, password, ip);
-            System.out.println(username+ " " + password + " " + ip);
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Suplied", 400, e);
         }
         return "{\"resp\" : \"success\"}";
     }
 
-    @POST
-    @Path("/2fa/validate")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response validate2FACode(String jsonString) {
-        String username;
-        String twoFactor;
-        boolean isSame;
-        JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-        username = json.get("username").getAsString();
-        twoFactor = json.get("twoFactor").getAsString();
-        isSame = USER_FACADE.validate2FA(username, twoFactor);
-        if(!isSame) {
-            return Response.status(401,(new Gson().toJson(isSame))).build();
-        }
-        return Response.ok().build();
-    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -90,13 +74,23 @@ public class LoginEndpoint {
         String username;
         String password;
         String ip;
+        String twoFactor;
+        boolean isSame;
         try {
             JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
             username = json.get("username").getAsString();
             password = json.get("password").getAsString();
             ip = json.get("ip").getAsString();
+            twoFactor = json.get("twoFactor").getAsString();
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Suplied", 400, e);
+        }
+        if(twoFactor == "") {
+            return Response.status(401,(new Gson().toJson("Please validate yourself"))).build();
+        }
+        isSame = USER_FACADE.validate2FA(username, twoFactor, ip);
+        if(!isSame) {
+            return Response.status(401,(new Gson().toJson(isSame))).build();
         }
         try {
             User user = USER_FACADE.getVeryfiedUser(username, password, ip);

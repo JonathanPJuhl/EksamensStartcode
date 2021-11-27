@@ -26,6 +26,7 @@ public class ApplicationConfig extends Application {
         resources.add(UserResource.class);
         resources.add(RegisterMaliciousIntent.class);
         resources.add(AdminResource.class);
+        resources.add(ConnectionsResource.class);
     }
 
 }
