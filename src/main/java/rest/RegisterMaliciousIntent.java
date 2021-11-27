@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.LoginAttempts;
 import facades.MaliciousIntentFacade;
-import security.Logging;
+//import security.Logging;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
@@ -19,7 +19,7 @@ public class RegisterMaliciousIntent {
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static MaliciousIntentFacade facade = MaliciousIntentFacade.getMaliciousIntentFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static Logging log;
+   /* private static Logging log;
 
     static {
         try {
@@ -27,20 +27,20 @@ public class RegisterMaliciousIntent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @POST
     @Path("injection")
     @Produces(MediaType.APPLICATION_JSON)
     public void registerInjectionAttempt(String info) throws IOException {
-        log.warningLog(info);
+        //log.warningLog(info);
         facade.logAttempt(GSON.fromJson(info, LoginAttempts.class));
     }
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
     public void registerLoginAttempt(String info) throws IOException {
-        log.warningLog(info);
+        //log.warningLog(info);
         facade.logAttempt(GSON.fromJson(info, LoginAttempts.class));
     }
 }

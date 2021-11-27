@@ -4,9 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import entities.RelationStatus;
 import facades.ConnectionsFacade;
-import security.Logging;
+//import security.Logging;
 import utils.EMF_Creator;
 
 import javax.annotation.security.RolesAllowed;
@@ -20,7 +19,7 @@ public class ConnectionsResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static ConnectionsFacade facade = ConnectionsFacade.getConnectionsFacade(EMF);
-    private static Logging log;
+   /* private static Logging log;
 
     static {
         try {
@@ -28,7 +27,7 @@ public class ConnectionsResource {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 

@@ -5,13 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entities.User;
-import entities.ResetPasswordDTO;
 import entities.UserDTO;
 import facades.MultiMediaFacade;
 import facades.UserFacade;
-import security.Logging;
+//import security.Logging;
 import utils.EMF_Creator;
-import utils.MailSystem;
 import utils.SetupTestUsers;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
@@ -25,7 +23,7 @@ public class UserResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static UserFacade facade = UserFacade.getUserFacade(EMF);
-    private static Logging log;
+    /*private static Logging log;
 
     static {
         try {
@@ -33,7 +31,7 @@ public class UserResource {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -46,7 +44,7 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getInfoForAll() throws IOException {
-        log.warningLog("OH NO");
+        //log.warningLog("OH NO");
         return "{\"msg\":\"Hello anonymous\"}";
     }
 

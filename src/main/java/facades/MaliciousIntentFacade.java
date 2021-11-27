@@ -2,7 +2,7 @@ package facades;
 
 import entities.BannedIPS;
 import entities.LoginAttempts;
-import security.Logging;
+//import security.Logging;
 import utils.MailSystem;
 
 import javax.persistence.EntityManager;
@@ -16,7 +16,7 @@ public class MaliciousIntentFacade {
 
     private static EntityManagerFactory emf;
     private static MaliciousIntentFacade instance;
-    private static Logging log;
+    /*private static Logging log;
 
     static {
         try {
@@ -24,7 +24,7 @@ public class MaliciousIntentFacade {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private MaliciousIntentFacade() {
     }
@@ -127,11 +127,11 @@ public class MaliciousIntentFacade {
         }
         em.getTransaction().commit();
         em.close();
-        try {
+       /* try {
             log.warningLog("Ban was created for ip: " + att.getIp());
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void liftBan (String mail, String ip) {
@@ -147,11 +147,11 @@ public class MaliciousIntentFacade {
         deleteMatchingLoginAttempts.executeUpdate();
         em.getTransaction().commit();
         em.close();
-        try {
+        /*try {
             log.infoLog(ip + " has lifted their ban");
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public boolean isBanned (LoginAttempts att) {
@@ -169,11 +169,11 @@ public class MaliciousIntentFacade {
         } else if (Long.parseLong(banFound.getBannedUntil()) >= currentDate) {
             return banFound.getBannedFromAccount() != null && banFound.getBannedFromAccount().contains(att.getTargetAccount());
         }
-        try {
+        /*try {
             log.warningLog(att.getIp() + " which is banned, is trying to access the site again");
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         return false;
     }
 }

@@ -4,16 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import entities.ResetPasswordDTO;
-import entities.User;
-import entities.UserDTO;
 import facades.AdminFacade;
-import facades.MultiMediaFacade;
-import facades.UserFacade;
-import security.Logging;
+//import security.Logging;
 import utils.EMF_Creator;
-import utils.MailSystem;
-import utils.SetupTestUsers;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
@@ -31,15 +24,15 @@ public class AdminResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static AdminFacade facade = AdminFacade.getAdminFacade(EMF);
-    private static Logging log;
+   // private static Logging log;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    static {
+    /*static {
         try {
             log = Logging.getLog();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Context
     private UriInfo context;
