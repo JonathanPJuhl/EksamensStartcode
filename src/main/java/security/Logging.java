@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class Logging {
     Logger logger = Logger.getLogger("log");
     boolean append = true;
-    FileHandler handler = new FileHandler("D:/uploadedFiles/logs.log", append);
+    FileHandler handler = new FileHandler("/var/www/html/logs.log", append);
     private static Logging instance;
 
     private Logging() throws IOException {
