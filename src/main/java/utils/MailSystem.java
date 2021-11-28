@@ -55,7 +55,7 @@ public class MailSystem {
             message.setSubject("Reset password");
 
             message.setContent(
-                    "<p>Please click: <p> <a href=\"www.ipwithme.com/sys-frontend/#/resetPW/" + recipient + "\">Here</a>" +
+                    "<p>Please click: <p> <a href=\"www.ipwithme.dk/resetPW/" + recipient + "\">Here</a>" +
                             "<p> And input: </p> <p>" + key + "</p>" +
                             "<p> to reset your password</p><p>Kind regards, JJStocks</p>",
                     "text/html");
@@ -161,7 +161,7 @@ public class MailSystem {
                     "<p>Warning, multiple attempts at logging in on your account from ip: "+ ip +
                             " <p> This ip, in combination with your account has been temporarily banned. If this was a mistake" +
                             "and it was you, trying to log in, please the following password along with your mail on: </p>" +
-                            " <p> <a href=\"www.ipwithme.com/sys-frontend/#/unlock\">This site</a><p> to reactivate</p>" +
+                            " <p> <a href=\"www.ipwithme.dk/unlock\">This site</a><p> to reactivate</p>" +
                                     "<p>Password: " + uniqueKey + "</p>"+
                                     "<p>Kind regards</p>"+
                                     "<p>JJStocks</p>",
@@ -218,7 +218,7 @@ public class MailSystem {
                     "<p>Warning, multiple attempts at logging in on your account from ip: "+
                             " <p> This ip, in combination with your account has been temporarily banned. If this was a mistake" +
                             "and it was you, trying to log in, please the following password along with your mail on: </p>" +
-                            " <p> <a href=\"www.ipwithme.com/sys-frontend/#/unlock\">This site</a><p> to reactivate</p>" +
+                            " <p> <a href=\"www.ipwithme.dk/verify\">This site</a><p> to reactivate</p>" +
                             "<p>Password: " + uniqueKey + "</p>"+
                             "<p>Kind regards</p>"+
                             "<p>JJStocks</p>",
