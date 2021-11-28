@@ -39,6 +39,8 @@ public class UserFacade {
         MaliciousIntentFacade mIF = MaliciousIntentFacade.getMaliciousIntentFacade(emf);
         User endUser = findUserByUsername(username);
         LoginAttempts lA = new LoginAttempts(ip, username, "login");
+        System.out.println("USER VERIFIYER: " + endUser);
+        System.out.println("USER VERIFIYER lA: " + lA);
 
         if (userPassedValidation(endUser)){
             throw new AuthenticationException("You did not verify your email, your account has been deleted.");
@@ -212,6 +214,7 @@ public class UserFacade {
     }
 
     public boolean userPassedValidation(User user) {
+        System.out.println("USER VALIDATION: " + user.getTtlBeforeDeletion());
         EntityManager em = emf.createEntityManager();
         Date now = new Date();
         if (user.getTtlBeforeDeletion().before(now)) {
