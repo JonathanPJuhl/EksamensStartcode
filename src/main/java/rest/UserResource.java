@@ -44,8 +44,6 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getInfoForAll() throws IOException {
-        //log.warningLog("OH NO");
-        System.out.println(new File("").getAbsolutePath());
         return "{\"msg\":\"Hello anonymous\"}";
     }
 
