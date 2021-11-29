@@ -120,21 +120,18 @@ public class ConnectionsFacade {
             for (User u : tableEmpty
             ) {
                 if (cList.size() <= 0) {
-                    System.out.println("NOT HERE HOPEFULLY");
                     rs.add(new RelationStatus(u.getUsername(), false));
                 } else {
                     for (Connections c : cList
                     ) {
                         if (c.getRelation().getOther_user().equals(u.getUsername()) && c.getRelation().getThis_user().equals(thisUser)) {
                             if (!c.isIs_blocked()) {
-                                System.out.println("HERE HOPEFULLY 1");
                                 rs.add((new RelationStatus(u.getUsername(), c.isRequested())));
                             }
                         } else if (c.getRelation().getThis_user().equals(u.getUsername()) && c.getRelation().getOther_user().equals(thisUser)) {
                             break;
                         }else if (!(c.getRelation().getThis_user().equals(u.getUsername()) && c.getRelation().getOther_user().equals(thisUser))
                         && !(c.getRelation().getOther_user().equals(u.getUsername()) && c.getRelation().getThis_user().equals(thisUser))){
-                            System.out.println("HERE HOPEFULLY 2");
                             rs.add(new RelationStatus(u.getUsername(), false));
                         }
                     }

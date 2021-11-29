@@ -44,7 +44,6 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
         return Response.Status.INTERNAL_SERVER_ERROR;
     }
 
-    //Small hack, to provide json-error response in the filter
     public static Response makeErrRes(String msg, int status) {
         ExceptionDTO error = new ExceptionDTO(status, msg);
         String errJson = gson.toJson(error);
